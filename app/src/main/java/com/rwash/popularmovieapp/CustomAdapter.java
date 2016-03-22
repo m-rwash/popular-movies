@@ -38,6 +38,8 @@ public class CustomAdapter extends BaseAdapter {
 
             ImageView imageView = (ImageView) myView.findViewById(R.id.grid_item_image);
             imageView.setImageResource(images[position]);
+            imageView.setPadding(8, 8, 8, 8);
+           // imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
 
 
             convertView = inflater.inflate(R.layout.grid_item, parent, false);

@@ -4,14 +4,11 @@
     android:layout_height="match_parent"
     tools:context="com.rwash.popularmovieapp.GridFragment">
 
-    <GridView
-        android:id="@+id/gridview"
-        android:layout_width="match_parent"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rVmovies"
         android:layout_height="match_parent"
-        android:numColumns="2"
-        android:verticalSpacing="0dp"
-        android:horizontalSpacing="0dp"
-        android:stretchMode="columnWidth"
+        android:layout_width="match_parent"
+        android:gravity="center"
         />
 
 </FrameLayout>
