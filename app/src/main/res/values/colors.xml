@@ -1,20 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="book_without_palette">#1C1D23</color>
+    <!--<color name="book_without_palette">#1C1D23</color>
     <color name="text_without_palette">#ffeae1da</color>
+-->
 
-    <!--
-    <color name="colorPrimary">#3F51B5</color>
+    <!--<color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
     -->
 
-    <!-- theme -->
-    <color name="color_primary">#F50057</color>
-    <color name="color_primary_trans">#33f50057</color>
-    <color name="color_primary_dark">#AE0554</color>
-    <color name="color_accent">#6734BA</color>
-    <color name="w_background">#ff232323</color>
+
+<!--
+    <color name="colorPrimary">#F50057</color>  -->
+
+    <color name="colorPrimary">#000044</color>
+    <color name="colorPrimaryTrans">#33f50057</color>
+    <color name="colorPrimaryDark">#003366</color>
+    <color name="colorAccent">#6734BA</color>
+    <color name="background">#003366</color>
 
 
 </resources>
