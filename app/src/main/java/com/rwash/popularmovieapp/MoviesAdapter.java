@@ -21,10 +21,11 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder
 
     private static ArrayList<MovieObject> moviesArray = new ArrayList<>();
 
-    public final static String EXTRA_MOVIE_TITLE        = "MOVIE_TITLE";
-    public final static String EXTRA_MOVIE_POSTER       = "MOVIE_POSTER";
-    public final static String EXTRA_MOVIE_OVERVIEW     = "MOVIE_OVERVIEW";
-    public final static String EXTRA_MOVIE_RELEASE_DATE = "MOVIE_RELEASE_DATE";
+    public final static String EXTRA_MOVIE_TITLE          = "MOVIE_TITLE";
+    public final static String EXTRA_MOVIE_POSTER         = "MOVIE_POSTER";
+    public final static String EXTRA_MOVIE_OVERVIEW       = "MOVIE_OVERVIEW";
+    public final static String EXTRA_MOVIE_RELEASE_DATE   = "MOVIE_RELEASE_DATE";
+    public final static String EXTRA_MOVIE_ORIGINAL_TITLE = "MOVIE_ORIGINAL_TITLE";
 
 
     public MoviesAdapter(ArrayList<MovieObject> moviesArray)
@@ -55,10 +56,11 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder
         {
             /* Initialize intent to pass movie attributes to MovieDetailActivity class*/
             Intent intent = new Intent(context, MovieDetailActivity.class);
-            intent.putExtra(EXTRA_MOVIE_TITLE,         moviesArray.get(getAdapterPosition()).getTitle());
-            intent.putExtra(EXTRA_MOVIE_POSTER,       moviesArray.get(getAdapterPosition()).getImageUrl());
-            intent.putExtra(EXTRA_MOVIE_OVERVIEW,     moviesArray.get(getAdapterPosition()).getOverview());
-            intent.putExtra(EXTRA_MOVIE_RELEASE_DATE, moviesArray.get(getAdapterPosition()).getReleaseDate());
+            intent.putExtra(EXTRA_MOVIE_TITLE,          moviesArray.get(getAdapterPosition()).getTitle());
+            intent.putExtra(EXTRA_MOVIE_POSTER,         moviesArray.get(getAdapterPosition()).getImageUrl());
+            intent.putExtra(EXTRA_MOVIE_OVERVIEW,       moviesArray.get(getAdapterPosition()).getOverview());
+            intent.putExtra(EXTRA_MOVIE_RELEASE_DATE,   moviesArray.get(getAdapterPosition()).getReleaseDate());
+            intent.putExtra(EXTRA_MOVIE_ORIGINAL_TITLE, moviesArray.get(getAdapterPosition()).getOriginalTitle());
 
             context.startActivity(intent);
             Toast.makeText(context, moviesArray.get(getAdapterPosition()).getTitle(), Toast.LENGTH_SHORT).show();

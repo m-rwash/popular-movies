@@ -46,11 +46,18 @@
                     android:textStyle="bold"
                     android:textColor="#fff"/>
                 <TextView
+                    android:id="@+id/movieOriginalTitleTv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textStyle="italic"
+                    android:textSize="12dp"
+                    android:textColor="#fff"/>
+                <TextView
                     android:id="@+id/movieReleaseDateTv"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Movie Release Date"
-                    android:textSize="12dp"
+                    android:textSize="10dp"
                     android:textColor="#fff"/>
             </LinearLayout>
         </LinearLayout>

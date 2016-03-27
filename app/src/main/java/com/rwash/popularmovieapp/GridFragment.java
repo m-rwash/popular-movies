@@ -1,9 +1,10 @@
 package com.rwash.popularmovieapp;
 
-import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -24,25 +25,30 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 
 public class GridFragment extends Fragment {
-    /*
-    * https://api.themoviedb.org/3/discover/movie?api_key=aeab5ec62e5555d42ace5362024cbbaf&/discover/movie?sort_by=vote_average.desc
-    * */
 
     private RecyclerView recyclerViewMovies;
+    private final String api_key = "aeab5ec62e5555d42ace5362024cbbaf";
 
     public GridFragment() {
         // Required empty public constructor
     }
 
+    public void update()
+    {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        String order = sharedPreferences.getString(getString(R.string.pref_order_key),
+                                                   getString(R.string.pref_order_popular));
+        new FetchMovies().execute(order);
+    }
+
     @Override
     public void onStart() {
         super.onStart();
-        new FetchMovies().execute();
+        update();
     }
 
     @Override
@@ -79,13 +85,13 @@ public class GridFragment extends Fragment {
         int id = item.getItemId();
         if(id == R.id.action_refresh)
         {
-            new FetchMovies().execute();
+            update();
         }
         return super.onOptionsItemSelected(item);
     }
 
     /* Fetching Movies data from TMBD api in background thread by extending AsyncTask class */
-    public class FetchMovies extends AsyncTask<Void, Void, ArrayList<MovieObject>>
+    public class FetchMovies extends AsyncTask<String, Void, ArrayList<MovieObject>>
     {
         private final String LOG_TAG = "FetchMovies Class";
 
@@ -107,6 +113,7 @@ public class GridFragment extends Fragment {
             String imageUrl;
             String overview;
             String releaseDate;
+            String originalTitle;
 
             ArrayList<MovieObject> movieObjectsArray = new ArrayList<>();
 
@@ -114,22 +121,25 @@ public class GridFragment extends Fragment {
             {
                 JSONObject movie = resultsArray.getJSONObject(i);
 
-                /*get title of the movie & set it in titles array*/
-                title = movie.getString("original_title");
+                /*get title of the movie & pass it to our movie object*/
+                title = movie.getString("title");
 
-                /*get poster path of the movie & set it in imagePaths array*/
+                /*get original title of the movie & pass it to our movie object */
+                originalTitle = movie.getString("original_title");
+
+                /*get poster path of the movie & pass it to our movie object*/
                 imagePaths[i] = movie.getString("poster_path");
 
                 /*Concatenate image path to the base image url */
                 imageUrl = imageBaseUrl+imagePaths[i];
 
-                /*get overview of the movie*/
+                /*get overview of the movie & pass it to our movie object*/
                 overview = movie.getString("overview");
 
-                /*get release date of the movie*/
+                /*get release date of the movie & pass it to our movie object*/
                 releaseDate = movie.getString("release_date");
 
-                MovieObject movieObject = new MovieObject(title, imageUrl, overview, releaseDate);
+                MovieObject movieObject = new MovieObject(title, imageUrl, overview, releaseDate, originalTitle);
                 movieObjectsArray.add(movieObject);
 
             }
@@ -147,28 +157,52 @@ public class GridFragment extends Fragment {
         }
 
         @Override
-        protected ArrayList<MovieObject> doInBackground(Void... params)
+        protected ArrayList<MovieObject> doInBackground(String... params)
         {
             HttpURLConnection httpURLConnection = null;
             BufferedReader bufferedReader = null;
 
             String returnedJsonStr=null;
 
-            String api_key = "aeab5ec62e5555d42ace5362024cbbaf";
+            final String TMBD_BASE_URL  = "https://api.themoviedb.org/3/discover/movie?";
+            final String API_KEY        = "api_key";
+            final String SORT_BY        = "sort_by";
+            final String VOTE_COUNT     = "vote_count.gte";
+             /*final String DISCOVER_PARAM = "discover";
+            final String MOVIE_PARAM    = "movie?";*/
 
-            final String TMBD_BASE_URL = "https://api.themoviedb.org/3/discover/movie?";
-            final String DISCOVER_PARAM = "discover";
-            final String MOVIE_PARAM = "movie?";
-            final String API_KEY = "api_key";
+            String popularity_desc  = "popularity.desc";
+            String voteAverage_desc = "vote_average.desc";
+            String voteCount        = "400";
 
             try
             {
                 // Building URL
-                Uri builtUri = Uri.parse(TMBD_BASE_URL).buildUpon()
-                        .appendQueryParameter(API_KEY, api_key)
-                        .build();
+                Uri builtUri=null;
+                URL url=null;
 
-                URL url = new URL(builtUri.toString());
+                String param = params[0];
+                Log.v(LOG_TAG, "Param: "+param);
+
+                if(param.equals("popular"))
+                {
+                    builtUri = Uri.parse(TMBD_BASE_URL).buildUpon()
+                            .appendQueryParameter(API_KEY, api_key)
+                            .appendQueryParameter(SORT_BY, popularity_desc)
+                            .build();
+                    url = new URL(builtUri.toString());
+
+                }
+                else
+                {
+                    builtUri = Uri.parse(TMBD_BASE_URL).buildUpon()
+                            .appendQueryParameter(API_KEY, api_key)
+                            .appendQueryParameter(VOTE_COUNT, voteCount)
+                            .appendQueryParameter(SORT_BY, voteAverage_desc)
+                            .build();
+
+                    url = new URL(builtUri.toString());
+                }
                 Log.v(LOG_TAG, "Built URI " + builtUri.toString());
 
                 // Open http conection

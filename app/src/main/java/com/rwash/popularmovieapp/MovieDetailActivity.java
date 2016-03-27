@@ -7,10 +7,15 @@ import android.util.Log;
 
 public class MovieDetailActivity extends AppCompatActivity {
 
-    private String movieTitle       = null;
-    private String moviePoster      = null;
-    private String movieOverview    = null;
-    private String movieReleaseDate = null;
+    private String movieTitle         = null;
+    private String moviePoster        = null;
+    private String movieOverview      = null;
+    private String movieReleaseDate   = null;
+    private String movieOriginalTitle = null;
+
+    public String getMovieOriginalTitle() {
+        return movieOriginalTitle;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,10 +31,11 @@ public class MovieDetailActivity extends AppCompatActivity {
 
             if(extras!=null)
             {
-                movieTitle       = extras.getString("MOVIE_TITLE");
-                moviePoster      = extras.getString("MOVIE_POSTER");
-                movieOverview    = extras.getString("MOVIE_OVERVIEW");
-                movieReleaseDate = extras.getString("MOVIE_RELEASE_DATE");
+                movieTitle         = extras.getString("MOVIE_TITLE");
+                moviePoster        = extras.getString("MOVIE_POSTER");
+                movieOverview      = extras.getString("MOVIE_OVERVIEW");
+                movieReleaseDate   = extras.getString("MOVIE_RELEASE_DATE");
+                movieOriginalTitle = extras.getString("MOVIE_ORIGINAL_TITLE");
 
                 Log.v("moviedetailactivity", "TEST: "+extras.getString("MOVIE_TILE"));
                 Log.v("moviedetailactivity", "TEST2: "+movieReleaseDate);

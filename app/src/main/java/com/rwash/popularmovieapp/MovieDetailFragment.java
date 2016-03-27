@@ -19,10 +19,11 @@ import com.squareup.picasso.Picasso;
  */
 public class MovieDetailFragment extends Fragment{
 
-    private String movieTitle       = null;
-    private String moviePoster      = null;
-    private String movieOverview    = null;
-    private String movieReleaseDate = null;
+    private String movieTitle         = null;
+    private String moviePoster        = null;
+    private String movieOverview      = null;
+    private String movieReleaseDate   = null;
+    private String movieOriginalTitle = null;
 
     private final String LOG_TAG = MovieDetailFragment.class.getSimpleName();
 
@@ -31,10 +32,11 @@ public class MovieDetailFragment extends Fragment{
     {
         super.onCreate(savedInstanceState);
         MovieDetailActivity activity = (MovieDetailActivity) getActivity();
-        movieTitle       = activity.getMovieTitle();
-        moviePoster      = activity.getMoviePoster();
-        movieOverview    = activity.getMovieOverview();
-        movieReleaseDate = activity.getMovieReleaseDate();
+        movieTitle         = activity.getMovieTitle();
+        moviePoster        = activity.getMoviePoster();
+        movieOverview      = activity.getMovieOverview();
+        movieReleaseDate   = activity.getMovieReleaseDate();
+        movieOriginalTitle = activity.getMovieOriginalTitle();
 
         Log.v(LOG_TAG, "movie title: "+movieTitle);
         Log.v(LOG_TAG, "movie release date: "+movieReleaseDate);
@@ -47,6 +49,9 @@ public class MovieDetailFragment extends Fragment{
 
         TextView  movieTitleTextView = (TextView) rootView.findViewById(R.id.movieTitleTv);
         movieTitleTextView.setText(movieTitle);
+
+        TextView movieOriginalTitleTextViw = (TextView) rootView.findViewById(R.id.movieOriginalTitleTv);
+        movieOriginalTitleTextViw.setText("("+movieOriginalTitle+")");
 
         TextView movieReleaseDateTextView = (TextView) rootView.findViewById(R.id.movieReleaseDateTv);
         movieReleaseDateTextView.setText(movieReleaseDate);
