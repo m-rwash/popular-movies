@@ -1,8 +1,8 @@
--Main Screen with Grid view (two columns)
--Every Grid cell show movie poster inside cardView and title right under the poster 
--Using RecyclerView 
--Connect to API though AsyncTask
--Fetching movie poster using Picasso
--Setting Activity to let user select (most popular/highest rated) movies view
--Save user's selection
--Movie's detail Activity (Movie's title, Movie's original title, Poster, Release date, Overview)
+* Main Screen with Grid view (two columns)
+* Every Grid cell show movie poster inside cardView and title right under the poster 
+* Using RecyclerView 
+* Connect to API though AsyncTask
+* Fetching movie poster using Picasso
+* Setting Activity to let user select (most popular/highest rated) movies view
+* Save user's selection
+* Movie's detail Activity (Movie's title, Movie's original title, Poster, Release date, Overview)
