@@ -3,5 +3,3 @@ the web.
 The UI is a GridView with two columns. Every row has two images with TextView over each.
 I had to make a custome ImageView which maintains its aspect ratio (keep square aspect ration for each ImageView)
 
-#####Screens:
-![Screen](http://s11.postimg.org/3n9vzqo9f/screen.jpg "Initial Mockup")
