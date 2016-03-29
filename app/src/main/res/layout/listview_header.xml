@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/scrollview"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/backgroundDark">
@@ -12,15 +11,6 @@
         android:layout_height="match_parent"
         android:showDividers="middle"
         android:divider="?android:attr/dividerHorizontal">
-
-        <TextView
-            android:id="@+id/movieTitleTv"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Movie Title"
-            android:textSize="30dp"
-            android:textStyle="bold"
-            android:textColor="#fff"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -48,21 +38,27 @@
                 android:orientation="vertical"
                 android:showDividers="middle"
                 android:layout_weight="1">
-
+                <TextView
+                    android:id="@+id/movieTitleTv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Movie Title"
+                    android:textSize="20dp"
+                    android:textStyle="bold"
+                    android:textColor="#fff"/>
                 <TextView
                     android:id="@+id/movieOriginalTitleTv"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textStyle="italic"
-                    android:textSize="15dp"
-                    android:text="Original Title"
+                    android:textSize="12dp"
                     android:textColor="#fff"/>
                 <TextView
                     android:id="@+id/movieReleaseDateTv"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Movie Release Date"
-                    android:textSize="13dp"
+                    android:textSize="10dp"
                     android:textColor="#fff"/>
             </LinearLayout>
         </LinearLayout>
@@ -102,18 +98,19 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Trailers:"
                 android:textSize="20dp"
                 android:textColor="#fff"/>
-            <ListView
-                android:id="@+id/trailersLv"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/backgroundDark">
-            </ListView>
+
         </LinearLayout>
+
+
     </LinearLayout>
+
+
+
 </ScrollView>

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="?android:attr/selectableItemBackground"
-    card_view:cardBackgroundColor="@color/colorPrimary"
+    card_view:cardBackgroundColor="@color/background"
     card_view:cardCornerRadius="4dp">
 
     <com.rwash.popularmovieapp.CustomImageView
@@ -20,7 +20,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_gravity="bottom"
-        android:background="#C0C0C0"
+        android:background="@color/colorAccent"
         android:focusable="false"
         android:focusableInTouchMode="false" >
 

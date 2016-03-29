@@ -12,6 +12,7 @@ public class MovieDetailActivity extends AppCompatActivity {
     private String movieOverview      = null;
     private String movieReleaseDate   = null;
     private String movieOriginalTitle = null;
+    private String movieId            = null;
 
     public String getMovieOriginalTitle() {
         return movieOriginalTitle;
@@ -36,6 +37,7 @@ public class MovieDetailActivity extends AppCompatActivity {
                 movieOverview      = extras.getString("MOVIE_OVERVIEW");
                 movieReleaseDate   = extras.getString("MOVIE_RELEASE_DATE");
                 movieOriginalTitle = extras.getString("MOVIE_ORIGINAL_TITLE");
+                movieId            = extras.getString("MOVIE_ID");
 
                 Log.v("moviedetailactivity", "TEST: "+extras.getString("MOVIE_TILE"));
                 Log.v("moviedetailactivity", "TEST2: "+movieReleaseDate);
@@ -60,5 +62,9 @@ public class MovieDetailActivity extends AppCompatActivity {
 
     public String getMovieReleaseDate() {
         return movieReleaseDate;
+    }
+
+    public String getMovieId() {
+        return movieId;
     }
 }

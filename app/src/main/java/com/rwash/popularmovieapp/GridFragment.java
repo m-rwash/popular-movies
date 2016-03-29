@@ -31,7 +31,9 @@ import java.util.ArrayList;
 public class GridFragment extends Fragment {
 
     private RecyclerView recyclerViewMovies;
-    private final String api_key = "aeab5ec62e5555d42ace5362024cbbaf";
+    public final static String api_key = "aeab5ec62e5555d42ace5362024cbbaf";
+
+
 
     public GridFragment() {
         // Required empty public constructor
@@ -114,6 +116,7 @@ public class GridFragment extends Fragment {
             String overview;
             String releaseDate;
             String originalTitle;
+            String movieId;
 
             ArrayList<MovieObject> movieObjectsArray = new ArrayList<>();
 
@@ -139,7 +142,11 @@ public class GridFragment extends Fragment {
                 /*get release date of the movie & pass it to our movie object*/
                 releaseDate = movie.getString("release_date");
 
-                MovieObject movieObject = new MovieObject(title, imageUrl, overview, releaseDate, originalTitle);
+                /*get movie id*/
+                movieId = movie.getString("id");
+
+
+                MovieObject movieObject = new MovieObject(title, imageUrl, overview, releaseDate, originalTitle, movieId);
                 movieObjectsArray.add(movieObject);
 
             }
@@ -215,13 +222,13 @@ public class GridFragment extends Fragment {
                 StringBuffer buffer = new StringBuffer();
 
                 if(inputStream==null)
-                {
                     return null;
-                }
+
                 bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
 
                 String line;
-                while ((line = bufferedReader.readLine()) != null) {
+                while ((line = bufferedReader.readLine()) != null)
+                {
 
                     buffer.append(line);
                 }

@@ -1,5 +1,7 @@
 package com.rwash.popularmovieapp;
 
+import java.util.ArrayList;
+
 /**
  * Created by bonzo on 3/26/16.
  */
@@ -11,13 +13,19 @@ public class MovieObject {
     private String overview;
     private String releaseDate;
     private String originalTitle;
+    private String movieId;
 
-    public MovieObject(String title, String imageUrl, String overview, String releaseDate, String originalTitle) {
+    private ArrayList<String> trailers = new ArrayList<>();
+    private ArrayList<String> reviews  = new ArrayList<>();
+
+    public MovieObject(String title, String imageUrl, String overview, String releaseDate, String originalTitle, String movieId)
+    {
         this.title         = title;
         this.imageUrl      = imageUrl;
         this.overview      = overview;
         this.releaseDate   = releaseDate;
         this.originalTitle = originalTitle;
+        this.movieId       = movieId;
     }
 
     /*Attributes setters*/
@@ -39,6 +47,9 @@ public class MovieObject {
     public void setOriginalTitle(String originalTitle) {
         this.originalTitle = originalTitle;
     }
+    public void setMovieId(String movieId) {
+        this.movieId = movieId;
+    }
 
     /*Attributes getters*/
     public String getTitle() {
@@ -59,5 +70,9 @@ public class MovieObject {
 
     public String getOriginalTitle() {
         return originalTitle;
+    }
+
+    public String getMovieId() {
+        return movieId;
     }
 }

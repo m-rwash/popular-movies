@@ -17,7 +17,8 @@ import java.util.ArrayList;
 /**
  * Created by bonzo on 3/20/16.
  */
-public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder> {
+public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder>
+{
 
     private static ArrayList<MovieObject> moviesArray = new ArrayList<>();
 
@@ -26,6 +27,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder
     public final static String EXTRA_MOVIE_OVERVIEW       = "MOVIE_OVERVIEW";
     public final static String EXTRA_MOVIE_RELEASE_DATE   = "MOVIE_RELEASE_DATE";
     public final static String EXTRA_MOVIE_ORIGINAL_TITLE = "MOVIE_ORIGINAL_TITLE";
+    public final static String EXTRA_MOVIE_ID             = "MOVIE_ID";
 
 
     public MoviesAdapter(ArrayList<MovieObject> moviesArray)
@@ -61,6 +63,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder
             intent.putExtra(EXTRA_MOVIE_OVERVIEW,       moviesArray.get(getAdapterPosition()).getOverview());
             intent.putExtra(EXTRA_MOVIE_RELEASE_DATE,   moviesArray.get(getAdapterPosition()).getReleaseDate());
             intent.putExtra(EXTRA_MOVIE_ORIGINAL_TITLE, moviesArray.get(getAdapterPosition()).getOriginalTitle());
+            intent.putExtra(EXTRA_MOVIE_ID,             moviesArray.get(getAdapterPosition()).getMovieId());
 
             context.startActivity(intent);
             Toast.makeText(context, moviesArray.get(getAdapterPosition()).getTitle(), Toast.LENGTH_SHORT).show();
