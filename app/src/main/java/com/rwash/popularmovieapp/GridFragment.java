@@ -73,24 +73,7 @@ public class GridFragment extends Fragment {
         return rootView;
     }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
-    {
-        // inflate menu xml
-        inflater.inflate(R.menu.grid_fragment_menu, menu);
-    }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
-        // if refresh button pressed
-        int id = item.getItemId();
-        if(id == R.id.action_refresh)
-        {
-            update();
-        }
-        return super.onOptionsItemSelected(item);
-    }
 
     /* Fetching Movies data from TMBD api in background thread by extending AsyncTask class */
     public class FetchMovies extends AsyncTask<String, Void, ArrayList<MovieObject>>

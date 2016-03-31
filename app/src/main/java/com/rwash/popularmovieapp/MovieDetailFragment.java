@@ -1,10 +1,8 @@
 package com.rwash.popularmovieapp;
 
-import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
@@ -43,10 +40,12 @@ public class MovieDetailFragment extends Fragment{
     private String movieId            = null;
 
     private ArrayList<TrailerObject> trailers = new ArrayList<>();
+    private ArrayList<ReviewObject> reviews = new ArrayList<>();
 
     private final String LOG_TAG = MovieDetailFragment.class.getSimpleName();
 
-    private ListView listView;
+    private ListView trailersListView;
+    private ListView reviewsListView;
 
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -69,6 +68,7 @@ public class MovieDetailFragment extends Fragment{
     public void onStart() {
         super.onStart();
         new FetchTrailers().execute(movieId);
+        new FetchReviews().execute(movieId);
 
     }
 
@@ -95,9 +95,9 @@ public class MovieDetailFragment extends Fragment{
                 .load(moviePoster)
                 .into(moviePosterImageView);
 
-        listView = (ListView)rootView.findViewById(R.id.trailersLv);
+        trailersListView = (ListView)rootView.findViewById(R.id.trailersLv);
 
-        listView.setOnTouchListener(new ListView.OnTouchListener() {
+        trailersListView.setOnTouchListener(new ListView.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 int action = event.getAction();
@@ -119,10 +119,137 @@ public class MovieDetailFragment extends Fragment{
             }
         });
 
-        /*View view = inflater.inflate(R.layout.listview_header, container, false);
-        listView.addHeaderView(view);*/
+        reviewsListView = (ListView) rootView.findViewById(R.id.reviewsLv);
+
+        reviewsListView.setOnTouchListener(new ListView.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                int action = event.getAction();
+                switch (action) {
+                    case MotionEvent.ACTION_DOWN:
+                        // Disallow ScrollView to intercept touch events.
+                        v.getParent().requestDisallowInterceptTouchEvent(true);
+                        break;
+
+                    case MotionEvent.ACTION_UP:
+                        // Allow ScrollView to intercept touch events.
+                        v.getParent().requestDisallowInterceptTouchEvent(false);
+                        break;
+                }
+
+                // Handle ListView touch events.
+                v.onTouchEvent(event);
+                return true;
+            }
+        });
 
         return rootView;
+    }
+
+    public class FetchReviews extends  AsyncTask<String, Void, ArrayList<ReviewObject>>
+    {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        private ArrayList<ReviewObject> parseJson(String jsonStr) throws JSONException
+        {
+            JSONObject jsonObject  = new JSONObject(jsonStr);
+            JSONArray resultsArray = jsonObject.getJSONArray("results");
+
+            ArrayList<ReviewObject> reviewObjects = new ArrayList<ReviewObject>();
+
+            for(int i=0; i<resultsArray.length(); i++)
+            {
+                JSONObject review = resultsArray.getJSONObject(i);
+                String author  = review.getString("author");
+                String content = review.getString("content");
+                String url     = review.getString("url");
+
+                reviewObjects.add(new ReviewObject(author, content, url));
+            }
+
+            return reviewObjects;
+        }
+
+
+        @Override
+        protected ArrayList<ReviewObject> doInBackground(String... params)
+        {
+            // https://api.themoviedb.org/3/movie/157336/reviews?api_key=aeab5ec62e5555d42ace5362024cbbaf
+
+            final String BASE_URL = "https://api.themoviedb.org/3/movie/";
+            final String API_KEY  = "api_key";
+            String ID = params[0];
+
+            HttpURLConnection httpURLConnection;
+            BufferedReader bufferedReader;
+
+            String returnedJsonStr="";
+
+            try
+            {
+                Uri builtUri = Uri.parse(BASE_URL).buildUpon()
+                        .appendPath(ID)
+                        .appendPath("reviews")
+                        .appendQueryParameter(API_KEY, GridFragment.api_key)
+                        .build();
+                URL url = new URL(builtUri.toString());
+
+                Log.v(LOG_TAG, builtUri.toString());
+
+                httpURLConnection = (HttpURLConnection) url.openConnection();
+                httpURLConnection.setRequestMethod("GET");
+                httpURLConnection.connect();
+
+                InputStream inputStream = httpURLConnection.getInputStream();
+                StringBuffer stringBuffer = new StringBuffer();
+
+                if(inputStream == null)
+                    return null;
+
+                bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+                String line;
+
+                while((line = bufferedReader.readLine())!=null)
+                    stringBuffer.append(line);
+
+                if(stringBuffer.length()==0)
+                    return null;
+
+                returnedJsonStr = stringBuffer.toString();
+
+                Log.v(LOG_TAG, "FetchReviews Class: Returned JSON: "+returnedJsonStr);
+
+
+            }
+            catch(IOException e)
+            {
+                e.printStackTrace();
+            }
+            try{
+                return parseJson(returnedJsonStr);
+            }
+            catch (JSONException e)
+            {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(ArrayList<ReviewObject> reviewObjects) {
+           if(!reviewObjects.isEmpty())
+           {
+               reviews = reviewObjects;
+
+               for(ReviewObject review : reviews)
+                   Log.v(LOG_TAG, review.toString());
+
+               reviewsListView.setAdapter(new ReviewAdapter(getActivity(), reviews));
+           }
+        }
     }
 
 
@@ -227,7 +354,7 @@ public class MovieDetailFragment extends Fragment{
                 for(TrailerObject trailer : trailers)
                     Log.v(LOG_TAG, trailer.toString());
 
-                listView.setAdapter(new TrailerAdapter(getActivity(), trailers));
+                trailersListView.setAdapter(new TrailerAdapter(getActivity(), trailers));
 
             }
 
