@@ -4,11 +4,13 @@
     <string-array name="pref_order_options">
         <item>"Most Popular"</item>
         <item>"Highest Rated"</item>
+        <item>"Favorites"</item>
     </string-array>
 
     <string-array name="pref_order_values">
         <item>"popular"</item>
         <item>"highest"</item>
+        <item>"favorites"</item>
     </string-array>
 
 </resources>

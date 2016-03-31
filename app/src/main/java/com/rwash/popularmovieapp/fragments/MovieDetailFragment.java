@@ -1,5 +1,7 @@
 package com.rwash.popularmovieapp.fragments;
 
+import android.content.ContentValues;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -9,12 +11,15 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.rwash.popularmovieapp.MovieDetailActivity;
 import com.rwash.popularmovieapp.R;
+import com.rwash.popularmovieapp.data.FavoritesDbHelper;
 import com.rwash.popularmovieapp.model.Review;
 import com.rwash.popularmovieapp.model.Trailer;
 import com.rwash.popularmovieapp.views.adapters.ReviewAdapter;
@@ -32,6 +37,8 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+
+import com.rwash.popularmovieapp.data.FavoritesContract.FavoritesMoviesEntry;
 
 /**
  * Created by bonzo on 3/25/16.
@@ -146,6 +153,30 @@ public class MovieDetailFragment extends Fragment{
                 // Handle ListView touch events.
                 v.onTouchEvent(event);
                 return true;
+            }
+        });
+
+
+        final Button favoriteButton = (Button) rootView.findViewById(R.id.favoriteButton);
+        favoriteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v)
+            {
+                FavoritesDbHelper favoritesDbHelper = new FavoritesDbHelper(getActivity());
+                SQLiteDatabase db =  favoritesDbHelper.getWritableDatabase();
+
+                ContentValues values = new ContentValues();
+                values.put(FavoritesMoviesEntry.COLUMN_MOVIE_ID, movieId);
+                values.put(FavoritesMoviesEntry.COLUMN_MOVIE_TITLE, movieTitle);
+                values.put(FavoritesMoviesEntry.COLUMN_MOVIE_ORIGINAL_TITLE, movieOriginalTitle);
+                values.put(FavoritesMoviesEntry.COLUMN_MOVIE_RELEASE_DATE, movieReleaseDate);
+                values.put(FavoritesMoviesEntry.COLUMN_MOVIE_OVERVIEW, movieOverview);
+                values.put(FavoritesMoviesEntry.COLUMN_MOVIE_POSTER_URL, moviePoster);
+
+                db.insert(FavoritesMoviesEntry.TABLE_NAME, FavoritesMoviesEntry.COLUMN_MOVIE_TITLE, values);
+
+                Toast.makeText(getActivity(), "Added to Favorites!", Toast.LENGTH_SHORT).show();
+
             }
         });
 

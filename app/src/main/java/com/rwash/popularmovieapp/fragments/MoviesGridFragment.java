@@ -1,6 +1,8 @@
 package com.rwash.popularmovieapp.fragments;
 
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -13,6 +15,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.rwash.popularmovieapp.data.FavoritesContract.FavoritesMoviesEntry;
+import com.rwash.popularmovieapp.data.FavoritesDbHelper;
 import com.rwash.popularmovieapp.views.adapters.MoviesAdapter;
 import com.rwash.popularmovieapp.R;
 import com.rwash.popularmovieapp.model.Movie;
@@ -35,8 +39,6 @@ public class MoviesGridFragment extends Fragment
     private RecyclerView recyclerViewMovies;
     public final static String api_key = "aeab5ec62e5555d42ace5362024cbbaf";
 
-
-
     public MoviesGridFragment()
     {
         // Required empty public constructor
@@ -47,7 +49,16 @@ public class MoviesGridFragment extends Fragment
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
         String order = sharedPreferences.getString(getString(R.string.pref_order_key),
                                                    getString(R.string.pref_order_popular));
-        new FetchMovies().execute(order);
+
+        if(order.equals("favorites"))
+        {
+            ArrayList<Movie> movies = getMoviesFromDatabase();
+            recyclerViewMovies.setAdapter(new MoviesAdapter(movies));
+        }
+        else
+        {
+            new FetchMovies().execute(order);
+        }
     }
 
     @Override
@@ -62,7 +73,6 @@ public class MoviesGridFragment extends Fragment
     {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-
     }
 
     @Override
@@ -79,6 +89,52 @@ public class MoviesGridFragment extends Fragment
     }
 
 
+    public ArrayList<Movie> getMoviesFromDatabase()
+    {
+        ArrayList<Movie> movies = new ArrayList<Movie>();
+
+        FavoritesDbHelper favoritesDbHelper = new FavoritesDbHelper(getActivity());
+        SQLiteDatabase db =  favoritesDbHelper.getWritableDatabase();
+
+        String[] columns = {
+                FavoritesMoviesEntry.COLUMN_MOVIE_ID,
+                FavoritesMoviesEntry.COLUMN_MOVIE_TITLE,
+                FavoritesMoviesEntry.COLUMN_MOVIE_ORIGINAL_TITLE,
+                FavoritesMoviesEntry.COLUMN_MOVIE_RELEASE_DATE,
+                FavoritesMoviesEntry.COLUMN_MOVIE_OVERVIEW,
+                FavoritesMoviesEntry.COLUMN_MOVIE_POSTER_URL
+        };
+
+        Cursor cursor = db.query(
+                FavoritesMoviesEntry.TABLE_NAME,    // table name
+                columns,                            // columns to return
+                null,
+                null,
+                null,
+                null,
+                null
+        );
+
+        /* retrieve the database by cursor. And construct movie objects from each row
+           each row representing movie object
+           add those movies(rows) up to ArrayList of movies*/
+        if(cursor != null && cursor.moveToFirst())
+        {
+            do{
+                String movieID            = cursor.getInt(cursor.getColumnIndex(FavoritesMoviesEntry.COLUMN_MOVIE_ID))+"";
+                String movieTitle         = cursor.getString(cursor.getColumnIndex(FavoritesMoviesEntry.COLUMN_MOVIE_TITLE));
+                String movieOriginalTitle = cursor.getString(cursor.getColumnIndex(FavoritesMoviesEntry.COLUMN_MOVIE_ORIGINAL_TITLE));
+                String movieReleaseDate   = cursor.getString(cursor.getColumnIndex(FavoritesMoviesEntry.COLUMN_MOVIE_RELEASE_DATE));
+                String movieOverview      = cursor.getString(cursor.getColumnIndex(FavoritesMoviesEntry.COLUMN_MOVIE_OVERVIEW));
+                String moviePosterUrl     = cursor.getString(cursor.getColumnIndex(FavoritesMoviesEntry.COLUMN_MOVIE_POSTER_URL));
+                Movie movie = new Movie(movieTitle, moviePosterUrl, movieOverview, movieReleaseDate, movieOriginalTitle, movieID);
+                movies.add(movie);
+                Log.v("getMovieFromDatabase", movie.toString());
+            } while (cursor.moveToNext());
+        }
+
+        return movies;
+    }
 
     /* Fetching Movies data from TMBD api in background thread by extending AsyncTask class */
     public class FetchMovies extends AsyncTask<String, Void, ArrayList<Movie>>
