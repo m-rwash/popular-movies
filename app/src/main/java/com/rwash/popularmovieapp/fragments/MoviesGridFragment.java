@@ -1,4 +1,4 @@
-package com.rwash.popularmovieapp;
+package com.rwash.popularmovieapp.fragments;
 
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -10,11 +10,12 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.rwash.popularmovieapp.views.adapters.MoviesAdapter;
+import com.rwash.popularmovieapp.R;
+import com.rwash.popularmovieapp.model.Movie;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -28,14 +29,16 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 
-public class GridFragment extends Fragment {
+public class MoviesGridFragment extends Fragment
+{
 
     private RecyclerView recyclerViewMovies;
     public final static String api_key = "aeab5ec62e5555d42ace5362024cbbaf";
 
 
 
-    public GridFragment() {
+    public MoviesGridFragment()
+    {
         // Required empty public constructor
     }
 
@@ -48,13 +51,15 @@ public class GridFragment extends Fragment {
     }
 
     @Override
-    public void onStart() {
+    public void onStart()
+    {
         super.onStart();
         update();
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
@@ -64,7 +69,7 @@ public class GridFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState)
     {
-        View rootView = inflater.inflate(R.layout.fragment_grid, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_movies_grid, container, false);
 
         recyclerViewMovies = (RecyclerView) rootView.findViewById(R.id.rVmovies);
         recyclerViewMovies.setLayoutManager(new GridLayoutManager(getActivity(), 2));
@@ -76,7 +81,7 @@ public class GridFragment extends Fragment {
 
 
     /* Fetching Movies data from TMBD api in background thread by extending AsyncTask class */
-    public class FetchMovies extends AsyncTask<String, Void, ArrayList<MovieObject>>
+    public class FetchMovies extends AsyncTask<String, Void, ArrayList<Movie>>
     {
         private final String LOG_TAG = "FetchMovies Class";
 
@@ -86,7 +91,7 @@ public class GridFragment extends Fragment {
         /*Base image url*/
         private final String imageBaseUrl = "http://image.tmdb.org/t/p/w500/";
 
-        private ArrayList<MovieObject> parseJson(String jsonStr) throws JSONException
+        private ArrayList<Movie> parseJson(String jsonStr) throws JSONException
         {
             JSONObject jsonObject = new JSONObject(jsonStr);
             JSONArray resultsArray = jsonObject.getJSONArray("results");
@@ -101,7 +106,7 @@ public class GridFragment extends Fragment {
             String originalTitle;
             String movieId;
 
-            ArrayList<MovieObject> movieObjectsArray = new ArrayList<>();
+            ArrayList<Movie> movieObjectsArray = new ArrayList<>();
 
             for(int i=0; i<resultsArray.length(); i++)
             {
@@ -129,7 +134,7 @@ public class GridFragment extends Fragment {
                 movieId = movie.getString("id");
 
 
-                MovieObject movieObject = new MovieObject(title, imageUrl, overview, releaseDate, originalTitle, movieId);
+                Movie movieObject = new Movie(title, imageUrl, overview, releaseDate, originalTitle, movieId);
                 movieObjectsArray.add(movieObject);
 
             }
@@ -147,7 +152,7 @@ public class GridFragment extends Fragment {
         }
 
         @Override
-        protected ArrayList<MovieObject> doInBackground(String... params)
+        protected ArrayList<Movie> doInBackground(String... params)
         {
             HttpURLConnection httpURLConnection = null;
             BufferedReader bufferedReader = null;
@@ -252,12 +257,11 @@ public class GridFragment extends Fragment {
         }
 
         @Override
-        protected void onPostExecute(ArrayList<MovieObject> movieObjects) {
-            if(!movieObjects.isEmpty())
+        protected void onPostExecute(ArrayList<Movie> movies) {
+            if(!movies.isEmpty())
             {
-                recyclerViewMovies.setAdapter(new MoviesAdapter(movieObjects));
+                recyclerViewMovies.setAdapter(new MoviesAdapter(movies));
             }
         }
     }
-
 }

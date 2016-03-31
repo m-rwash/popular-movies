@@ -1,4 +1,4 @@
-package com.rwash.popularmovieapp;
+package com.rwash.popularmovieapp.fragments;
 
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -13,6 +13,12 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.rwash.popularmovieapp.MovieDetailActivity;
+import com.rwash.popularmovieapp.R;
+import com.rwash.popularmovieapp.model.Review;
+import com.rwash.popularmovieapp.model.Trailer;
+import com.rwash.popularmovieapp.views.adapters.ReviewAdapter;
+import com.rwash.popularmovieapp.views.adapters.TrailerAdapter;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -39,8 +45,8 @@ public class MovieDetailFragment extends Fragment{
     private String movieOriginalTitle = null;
     private String movieId            = null;
 
-    private ArrayList<TrailerObject> trailers = new ArrayList<>();
-    private ArrayList<ReviewObject> reviews = new ArrayList<>();
+    private ArrayList<Trailer> trailers = new ArrayList<>();
+    private ArrayList<Review> reviews = new ArrayList<>();
 
     private final String LOG_TAG = MovieDetailFragment.class.getSimpleName();
 
@@ -146,19 +152,19 @@ public class MovieDetailFragment extends Fragment{
         return rootView;
     }
 
-    public class FetchReviews extends  AsyncTask<String, Void, ArrayList<ReviewObject>>
+    public class FetchReviews extends  AsyncTask<String, Void, ArrayList<Review>>
     {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
         }
 
-        private ArrayList<ReviewObject> parseJson(String jsonStr) throws JSONException
+        private ArrayList<Review> parseJson(String jsonStr) throws JSONException
         {
             JSONObject jsonObject  = new JSONObject(jsonStr);
             JSONArray resultsArray = jsonObject.getJSONArray("results");
 
-            ArrayList<ReviewObject> reviewObjects = new ArrayList<ReviewObject>();
+            ArrayList<Review> reviews = new ArrayList<Review>();
 
             for(int i=0; i<resultsArray.length(); i++)
             {
@@ -167,15 +173,15 @@ public class MovieDetailFragment extends Fragment{
                 String content = review.getString("content");
                 String url     = review.getString("url");
 
-                reviewObjects.add(new ReviewObject(author, content, url));
+                reviews.add(new Review(author, content, url));
             }
 
-            return reviewObjects;
+            return reviews;
         }
 
 
         @Override
-        protected ArrayList<ReviewObject> doInBackground(String... params)
+        protected ArrayList<Review> doInBackground(String... params)
         {
             // https://api.themoviedb.org/3/movie/157336/reviews?api_key=aeab5ec62e5555d42ace5362024cbbaf
 
@@ -193,7 +199,7 @@ public class MovieDetailFragment extends Fragment{
                 Uri builtUri = Uri.parse(BASE_URL).buildUpon()
                         .appendPath(ID)
                         .appendPath("reviews")
-                        .appendQueryParameter(API_KEY, GridFragment.api_key)
+                        .appendQueryParameter(API_KEY, MoviesGridFragment.api_key)
                         .build();
                 URL url = new URL(builtUri.toString());
 
@@ -239,33 +245,33 @@ public class MovieDetailFragment extends Fragment{
         }
 
         @Override
-        protected void onPostExecute(ArrayList<ReviewObject> reviewObjects) {
-           if(!reviewObjects.isEmpty())
+        protected void onPostExecute(ArrayList<Review> reviews) {
+           if(!reviews.isEmpty())
            {
-               reviews = reviewObjects;
+               MovieDetailFragment.this.reviews = reviews;
 
-               for(ReviewObject review : reviews)
+               for(Review review : MovieDetailFragment.this.reviews)
                    Log.v(LOG_TAG, review.toString());
 
-               reviewsListView.setAdapter(new ReviewAdapter(getActivity(), reviews));
+               reviewsListView.setAdapter(new ReviewAdapter(getActivity(), MovieDetailFragment.this.reviews));
            }
         }
     }
 
 
-    public class FetchTrailers extends AsyncTask<String, Void, ArrayList<TrailerObject>>
+    public class FetchTrailers extends AsyncTask<String, Void, ArrayList<Trailer>>
     {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
         }
 
-        private ArrayList<TrailerObject> parseJson(String jsonStr) throws JSONException
+        private ArrayList<Trailer> parseJson(String jsonStr) throws JSONException
         {
             JSONObject jsonObject  = new JSONObject(jsonStr);
             JSONArray resultsArray = jsonObject.getJSONArray("results");
 
-            ArrayList<TrailerObject> trailerObjects = new ArrayList<TrailerObject>();
+            ArrayList<Trailer> trailers = new ArrayList<Trailer>();
 
             for(int i=0; i<resultsArray.length(); i++)
             {
@@ -273,15 +279,15 @@ public class MovieDetailFragment extends Fragment{
                 String key  = trailer.getString("key");
                 String name = trailer.getString("name");
 
-                trailerObjects.add(new TrailerObject(key, name));
+                trailers.add(new Trailer(key, name));
             }
 
-            return trailerObjects;
+            return trailers;
         }
 
 
         @Override
-        protected ArrayList<TrailerObject> doInBackground(String... params) {
+        protected ArrayList<Trailer> doInBackground(String... params) {
 
             // https://api.themoviedb.org/3/movie/278/videos?api_key=aeab5ec62e5555d42ace5362024cbbaf
 
@@ -299,7 +305,7 @@ public class MovieDetailFragment extends Fragment{
                 Uri builtUri = Uri.parse(BASE_URL).buildUpon()
                         .appendPath(ID)
                         .appendPath("videos")
-                        .appendQueryParameter(API_KEY, GridFragment.api_key)
+                        .appendQueryParameter(API_KEY, MoviesGridFragment.api_key)
                         .build();
                 URL url = new URL(builtUri.toString());
 
@@ -346,15 +352,15 @@ public class MovieDetailFragment extends Fragment{
         }
 
         @Override
-        protected void onPostExecute(ArrayList<TrailerObject> trailerObjects) {
-            if(!trailerObjects.isEmpty())
+        protected void onPostExecute(ArrayList<Trailer> trailers) {
+            if(!trailers.isEmpty())
             {
-                trailers = trailerObjects;
+                MovieDetailFragment.this.trailers = trailers;
 
-                for(TrailerObject trailer : trailers)
+                for(Trailer trailer : MovieDetailFragment.this.trailers)
                     Log.v(LOG_TAG, trailer.toString());
 
-                trailersListView.setAdapter(new TrailerAdapter(getActivity(), trailers));
+                trailersListView.setAdapter(new TrailerAdapter(getActivity(), MovieDetailFragment.this.trailers));
 
             }
 

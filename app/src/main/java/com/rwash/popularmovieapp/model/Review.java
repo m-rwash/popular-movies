@@ -1,14 +1,14 @@
-package com.rwash.popularmovieapp;
+package com.rwash.popularmovieapp.model;
 
 /**
  * Created by bonzo on 3/31/16.
  */
-public class ReviewObject {
+public class Review {
     private String author;
     private String content;
     private String url;
 
-    public ReviewObject(String author, String content, String url) {
+    public Review(String author, String content, String url) {
         this.author = author;
         this.content = content;
         this.url = url;
@@ -16,7 +16,7 @@ public class ReviewObject {
 
     @Override
     public String toString() {
-        return "ReviewObject{" +
+        return "Review{" +
                 "author='" + author + '\'' +
                 ", content='" + content + '\'' +
                 ", url='" + url + '\'' +

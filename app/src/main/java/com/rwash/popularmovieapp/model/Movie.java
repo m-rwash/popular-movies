@@ -1,11 +1,11 @@
-package com.rwash.popularmovieapp;
+package com.rwash.popularmovieapp.model;
 
 import java.util.ArrayList;
 
 /**
  * Created by bonzo on 3/26/16.
  */
-public class MovieObject {
+public class Movie {
 
     /*Movie attributes*/
     private String title;
@@ -18,7 +18,7 @@ public class MovieObject {
     private ArrayList<String> trailers = new ArrayList<>();
     private ArrayList<String> reviews  = new ArrayList<>();
 
-    public MovieObject(String title, String imageUrl, String overview, String releaseDate, String originalTitle, String movieId)
+    public Movie(String title, String imageUrl, String overview, String releaseDate, String originalTitle, String movieId)
     {
         this.title         = title;
         this.imageUrl      = imageUrl;

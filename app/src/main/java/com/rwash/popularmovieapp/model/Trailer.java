@@ -1,21 +1,21 @@
-package com.rwash.popularmovieapp;
+package com.rwash.popularmovieapp.model;
 
 /**
  * Created by bonzo on 3/29/16.
  */
-public class TrailerObject {
+public class Trailer {
 
     private String key;
     private String name;
 
-    public TrailerObject(String key, String name) {
+    public Trailer(String key, String name) {
         this.key = key;
         this.name = name;
     }
 
     @Override
     public String toString() {
-        return "TrailerObject{" +
+        return "Trailer{" +
                 "key='" + key + '\'' +
                 ", name='" + name + '\'' +
                 '}';

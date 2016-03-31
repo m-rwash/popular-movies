@@ -1,4 +1,4 @@
-package com.rwash.popularmovieapp;
+package com.rwash.popularmovieapp.views.adapters;
 
 import android.content.Context;
 import android.content.Intent;
@@ -8,8 +8,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.rwash.popularmovieapp.MovieDetailActivity;
+import com.rwash.popularmovieapp.R;
+import com.rwash.popularmovieapp.model.Movie;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -20,7 +22,7 @@ import java.util.ArrayList;
 public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder>
 {
 
-    private static ArrayList<MovieObject> moviesArray = new ArrayList<>();
+    private static ArrayList<Movie> moviesArray = new ArrayList<>();
 
     public final static String EXTRA_MOVIE_TITLE          = "MOVIE_TITLE";
     public final static String EXTRA_MOVIE_POSTER         = "MOVIE_POSTER";
@@ -30,7 +32,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder
     public final static String EXTRA_MOVIE_ID             = "MOVIE_ID";
 
 
-    public MoviesAdapter(ArrayList<MovieObject> moviesArray)
+    public MoviesAdapter(ArrayList<Movie> moviesArray)
     {
         this.moviesArray = moviesArray;
     }
@@ -63,7 +65,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder
             intent.putExtra(EXTRA_MOVIE_OVERVIEW,       moviesArray.get(getAdapterPosition()).getOverview());
             intent.putExtra(EXTRA_MOVIE_RELEASE_DATE,   moviesArray.get(getAdapterPosition()).getReleaseDate());
             intent.putExtra(EXTRA_MOVIE_ORIGINAL_TITLE, moviesArray.get(getAdapterPosition()).getOriginalTitle());
-            intent.putExtra(EXTRA_MOVIE_ID,             moviesArray.get(getAdapterPosition()).getMovieId());
+            intent.putExtra(EXTRA_MOVIE_ID, moviesArray.get(getAdapterPosition()).getMovieId());
 
             context.startActivity(intent);
             //Toast.makeText(context, moviesArray.get(getAdapterPosition()).getTitle(), Toast.LENGTH_SHORT).show();

@@ -1,4 +1,4 @@
-package com.rwash.popularmovieapp;
+package com.rwash.popularmovieapp.views.adapters;
 
 import android.content.Context;
 import android.content.Intent;
@@ -11,31 +11,34 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.rwash.popularmovieapp.R;
+import com.rwash.popularmovieapp.model.Trailer;
+
 import java.util.ArrayList;
 
 /**
  * Created by bonzo on 3/29/16.
  */
-public class TrailerAdapter extends ArrayAdapter<TrailerObject> {
+public class TrailerAdapter extends ArrayAdapter<Trailer> {
 
     private String key = null;
 
-    public TrailerAdapter(Context context, ArrayList<TrailerObject> trailers) {
+    public TrailerAdapter(Context context, ArrayList<Trailer> trailers) {
         super(context, 0, trailers);
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
-        TrailerObject trailerObject = getItem(position);
+        Trailer trailer = getItem(position);
 
         if(convertView == null)
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.trailer_item, parent, false);
 
         TextView trailerNameTv = (TextView) convertView.findViewById(R.id.trailerNameTv);
-        trailerNameTv.setText(trailerObject.getName());
+        trailerNameTv.setText(trailer.getName());
 
-        key = trailerObject.getKey();
+        key = trailer.getKey();
         final String youtubeBaseUrl = "http://www.youtube.com/watch?";
 
         ImageView playButtonIv = (ImageView) convertView.findViewById(R.id.playButton);

@@ -8,7 +8,7 @@
     card_view:cardBackgroundColor="@color/background"
     card_view:cardCornerRadius="4dp">
 
-    <com.rwash.popularmovieapp.CustomImageView
+    <com.rwash.popularmovieapp.views.CustomImageView
         android:id="@+id/grid_item_image"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
