@@ -3,7 +3,7 @@
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/backgroundDark">
+    android:background="@color/background">
 
 
     <ImageView
@@ -18,7 +18,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:text="Trailer 1"
-        android:layout_gravity="center"
+        android:layout_gravity="center_horizontal|center_vertical"
         android:textAlignment="center"
         android:textColor="#fff"
         android:textSize="16dp"/>

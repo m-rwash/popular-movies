@@ -1,6 +1,8 @@
 package com.rwash.popularmovieapp.fragments;
 
 import android.content.ContentValues;
+import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -19,6 +21,7 @@ import android.widget.Toast;
 
 import com.rwash.popularmovieapp.MovieDetailActivity;
 import com.rwash.popularmovieapp.R;
+import com.rwash.popularmovieapp.data.FavoritesContract;
 import com.rwash.popularmovieapp.data.FavoritesDbHelper;
 import com.rwash.popularmovieapp.model.Review;
 import com.rwash.popularmovieapp.model.Trailer;
@@ -59,7 +62,6 @@ public class MovieDetailFragment extends Fragment{
 
     private ListView trailersListView;
     private ListView reviewsListView;
-
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
@@ -76,13 +78,30 @@ public class MovieDetailFragment extends Fragment{
         Log.v(LOG_TAG, "movie release date: " + movieReleaseDate);
 
     }
-
     @Override
     public void onStart() {
         super.onStart();
         new FetchTrailers().execute(movieId);
         new FetchReviews().execute(movieId);
 
+    }
+
+    public static boolean checkInDatabase(Context context, String movieId)
+    {
+        FavoritesDbHelper favoritesDbHelper = new FavoritesDbHelper(context);
+        SQLiteDatabase db =  favoritesDbHelper.getWritableDatabase();
+
+        String query = "SELECT * FROM " + FavoritesMoviesEntry.TABLE_NAME +
+                       " WHERE " + FavoritesMoviesEntry.COLUMN_MOVIE_ID  + " = " + movieId;
+        Cursor cursor = db.rawQuery(query, null);
+
+        if(cursor.getCount() <= 0)
+        {
+            cursor.close();
+            return false;
+        }
+        cursor.close();
+        return true;
     }
 
     @Override
@@ -149,7 +168,6 @@ public class MovieDetailFragment extends Fragment{
                         v.getParent().requestDisallowInterceptTouchEvent(false);
                         break;
                 }
-
                 // Handle ListView touch events.
                 v.onTouchEvent(event);
                 return true;
@@ -157,7 +175,10 @@ public class MovieDetailFragment extends Fragment{
         });
 
 
-        final Button favoriteButton = (Button) rootView.findViewById(R.id.favoriteButton);
+        final ImageView favoriteButton = (ImageView) rootView.findViewById(R.id.favoriteButton);
+        if(checkInDatabase(getActivity(), movieId))
+            favoriteButton.setImageResource(R.drawable.star);
+
         favoriteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v)
@@ -165,18 +186,26 @@ public class MovieDetailFragment extends Fragment{
                 FavoritesDbHelper favoritesDbHelper = new FavoritesDbHelper(getActivity());
                 SQLiteDatabase db =  favoritesDbHelper.getWritableDatabase();
 
-                ContentValues values = new ContentValues();
-                values.put(FavoritesMoviesEntry.COLUMN_MOVIE_ID, movieId);
-                values.put(FavoritesMoviesEntry.COLUMN_MOVIE_TITLE, movieTitle);
-                values.put(FavoritesMoviesEntry.COLUMN_MOVIE_ORIGINAL_TITLE, movieOriginalTitle);
-                values.put(FavoritesMoviesEntry.COLUMN_MOVIE_RELEASE_DATE, movieReleaseDate);
-                values.put(FavoritesMoviesEntry.COLUMN_MOVIE_OVERVIEW, movieOverview);
-                values.put(FavoritesMoviesEntry.COLUMN_MOVIE_POSTER_URL, moviePoster);
+                if(checkInDatabase(getActivity(), movieId))
+                {
+                    db.delete(FavoritesMoviesEntry.TABLE_NAME, FavoritesMoviesEntry.COLUMN_MOVIE_ID + "=?", new String[]{movieId});
+                    favoriteButton.setImageResource(R.drawable.unstar);
+                    Toast.makeText(getActivity(), "Deleted from Favorites!", Toast.LENGTH_SHORT).show();
+                }
+                else
+                {
+                    ContentValues values = new ContentValues();
+                    values.put(FavoritesMoviesEntry.COLUMN_MOVIE_ID, movieId);
+                    values.put(FavoritesMoviesEntry.COLUMN_MOVIE_TITLE, movieTitle);
+                    values.put(FavoritesMoviesEntry.COLUMN_MOVIE_ORIGINAL_TITLE, movieOriginalTitle);
+                    values.put(FavoritesMoviesEntry.COLUMN_MOVIE_RELEASE_DATE, movieReleaseDate);
+                    values.put(FavoritesMoviesEntry.COLUMN_MOVIE_OVERVIEW, movieOverview);
+                    values.put(FavoritesMoviesEntry.COLUMN_MOVIE_POSTER_URL, moviePoster);
 
-                db.insert(FavoritesMoviesEntry.TABLE_NAME, FavoritesMoviesEntry.COLUMN_MOVIE_TITLE, values);
-
-                Toast.makeText(getActivity(), "Added to Favorites!", Toast.LENGTH_SHORT).show();
-
+                    db.insert(FavoritesMoviesEntry.TABLE_NAME, FavoritesMoviesEntry.COLUMN_MOVIE_TITLE, values);
+                    favoriteButton.setImageResource(R.drawable.star);
+                    Toast.makeText(getActivity(), "Added to Favorites!", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -206,10 +235,8 @@ public class MovieDetailFragment extends Fragment{
 
                 reviews.add(new Review(author, content, url));
             }
-
             return reviews;
         }
-
 
         @Override
         protected ArrayList<Review> doInBackground(String... params)
@@ -289,7 +316,6 @@ public class MovieDetailFragment extends Fragment{
         }
     }
 
-
     public class FetchTrailers extends AsyncTask<String, Void, ArrayList<Trailer>>
     {
         @Override
@@ -315,8 +341,6 @@ public class MovieDetailFragment extends Fragment{
 
             return trailers;
         }
-
-
         @Override
         protected ArrayList<Trailer> doInBackground(String... params) {
 
@@ -379,9 +403,7 @@ public class MovieDetailFragment extends Fragment{
                 e.printStackTrace();
             }
             return null;
-
         }
-
         @Override
         protected void onPostExecute(ArrayList<Trailer> trailers) {
             if(!trailers.isEmpty())
@@ -392,11 +414,7 @@ public class MovieDetailFragment extends Fragment{
                     Log.v(LOG_TAG, trailer.toString());
 
                 trailersListView.setAdapter(new TrailerAdapter(getActivity(), MovieDetailFragment.this.trailers));
-
             }
-
         }
     }
-
-
 }
