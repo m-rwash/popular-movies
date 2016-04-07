@@ -3,15 +3,18 @@ package com.rwash.popularmovieapp;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.support.v7.widget.Toolbar;
+import android.widget.FrameLayout;
 
 import com.rwash.popularmovieapp.fragments.MoviesGridFragment;
 
 public class MainActivity extends AppCompatActivity
 {
-
+    private final String LOG_TAG = MainActivity.class.getSimpleName();
+    public static boolean twoPane=false;
     Toolbar toolbar;
 
     @Override
@@ -25,11 +28,29 @@ public class MainActivity extends AppCompatActivity
 
         if (savedInstanceState == null)
         {
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container,new MoviesGridFragment()).commit();
+            isTwoPane();
+            if(twoPane)
+            {
+                Log.v(LOG_TAG,"TWO PANE");
+                getSupportFragmentManager().beginTransaction()
+                        .add(R.id.frameLayoutMoviesGrid,new MoviesGridFragment()).commit();
+            }
+            else
+            {
+                Log.v(LOG_TAG,"ONE PANE");
+                getSupportFragmentManager().beginTransaction()
+                        .add(R.id.container,new MoviesGridFragment()).commit();
+            }
 
         }
 
+    }
+
+    private void isTwoPane()
+    {
+        FrameLayout frameLayout = (FrameLayout) findViewById(R.id.frameLayoutDetailContainer);
+        if(frameLayout != null)
+            twoPane = true;
     }
 
     @Override

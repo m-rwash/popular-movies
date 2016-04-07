@@ -4,7 +4,8 @@
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
+    android:orientation="horizontal"
+    android:showDividers="middle"
     tools:context="com.rwash.popularmovieapp.MainActivity"
     android:background="@color/background"
     android:configChanges="keyboardHidden|orientation|screenSize">
@@ -14,8 +15,23 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/colorPrimary">
-
     </android.support.v7.widget.Toolbar>
+
+    <FrameLayout
+        android:id="@+id/frameLayoutMoviesGrid"
+        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:layout_weight="1">
+    </FrameLayout>
+
+
+    <FrameLayout
+        android:id="@+id/frameLayoutDetailContainer"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="2">
+
+    </FrameLayout>
 
 
 

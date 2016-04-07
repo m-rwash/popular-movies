@@ -65,7 +65,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder
             intent.putExtra(EXTRA_MOVIE_OVERVIEW,       moviesArray.get(getAdapterPosition()).getOverview());
             intent.putExtra(EXTRA_MOVIE_RELEASE_DATE,   moviesArray.get(getAdapterPosition()).getReleaseDate());
             intent.putExtra(EXTRA_MOVIE_ORIGINAL_TITLE, moviesArray.get(getAdapterPosition()).getOriginalTitle());
-            intent.putExtra(EXTRA_MOVIE_ID, moviesArray.get(getAdapterPosition()).getMovieId());
+            intent.putExtra(EXTRA_MOVIE_ID,             moviesArray.get(getAdapterPosition()).getMovieId());
 
             context.startActivity(intent);
             //Toast.makeText(context, moviesArray.get(getAdapterPosition()).getTitle(), Toast.LENGTH_SHORT).show();

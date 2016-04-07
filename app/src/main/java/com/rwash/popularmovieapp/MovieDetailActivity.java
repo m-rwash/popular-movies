@@ -42,10 +42,19 @@ public class MovieDetailActivity extends AppCompatActivity {
                 movieId            = extras.getString("MOVIE_ID");
 
                 Log.v("moviedetailactivity", "TEST: "+extras.getString("MOVIE_TILE"));
-                Log.v("moviedetailactivity", "TEST2: "+movieReleaseDate);
+                Log.v("moviedetailactivity", "TEST2: " + movieReleaseDate);
 
-                getSupportFragmentManager().beginTransaction()
-                        .add(R.id.movie_detail_container,new MovieDetailFragment()).commit();
+                if(MainActivity.twoPane)
+                {
+                    getSupportFragmentManager().beginTransaction()
+                            .add(R.id.frameLayoutDetailContainer,new MovieDetailFragment()).commit();
+                }
+                else
+                {
+                    getSupportFragmentManager().beginTransaction()
+                            .add(R.id.movie_detail_container,new MovieDetailFragment()).commit();
+                }
+
             }
         }
     }

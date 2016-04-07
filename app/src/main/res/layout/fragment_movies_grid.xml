@@ -3,7 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".fragments.MoviesGridFragment"
-    android:background="@color/background">
+    android:background="@color/background"
+    android:configChanges="keyboardHidden|orientation|screenSize">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rVmovies"
