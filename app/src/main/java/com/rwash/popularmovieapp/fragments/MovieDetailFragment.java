@@ -11,6 +11,7 @@ import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -91,11 +92,14 @@ public class MovieDetailFragment extends Fragment{
         Log.v(LOG_TAG, "movie release date: " + movie.getReleaseDate());
     }
     @Override
-    public void onStart() {
+    public void onStart()
+    {
         super.onStart();
-        new FetchTrailers().execute(movie.getMovieId());
-        new FetchReviews().execute(movie.getMovieId());
-
+        if(MoviesGridFragment.connected)
+        {
+            new FetchTrailers().execute(movie.getMovieId());
+            new FetchReviews().execute(movie.getMovieId());
+        }
     }
 
     /*this function is for returning moviedetail fragment
@@ -153,52 +157,26 @@ public class MovieDetailFragment extends Fragment{
                 .into(moviePosterImageView);
 
         trailersListView = (ListView)rootView.findViewById(R.id.trailersLv);
-/*
-        trailersListView.setOnTouchListener(new ListView.OnTouchListener() {
+        trailersListView.setOnTouchListener(new View.OnTouchListener() {
+            // Setting on Touch Listener for handling the touch inside ScrollView
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                int action = event.getAction();
-                switch (action) {
-                    case MotionEvent.ACTION_DOWN:
-                        // Disallow ScrollView to intercept touch events.
-                        v.getParent().requestDisallowInterceptTouchEvent(true);
-                        break;
-
-                    case MotionEvent.ACTION_UP:
-                        // Allow ScrollView to intercept touch events.
-                        v.getParent().requestDisallowInterceptTouchEvent(false);
-                        break;
-                }
-
-                // Handle ListView touch events.
-                v.onTouchEvent(event);
-                return true;
+                // Disallow the touch request for ScrollView  when user touches the trailers ListView
+                v.getParent().requestDisallowInterceptTouchEvent(true);
+                return false;
             }
-        });*/
+        });
 
         reviewsListView = (ListView) rootView.findViewById(R.id.reviewsLv);
-
-      /*  reviewsListView.setOnTouchListener(new ListView.OnTouchListener() {
+        reviewsListView.setOnTouchListener(new View.OnTouchListener() {
+            // Setting on Touch Listener for handling the touch inside ScrollView
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                int action = event.getAction();
-                switch (action) {
-                    case MotionEvent.ACTION_DOWN:
-                        // Disallow ScrollView to intercept touch events.
-                        v.getParent().requestDisallowInterceptTouchEvent(true);
-                        break;
-
-                    case MotionEvent.ACTION_UP:
-                        // Allow ScrollView to intercept touch events.
-                        v.getParent().requestDisallowInterceptTouchEvent(false);
-                        break;
-                }
-                // Handle ListView touch events.
-                v.onTouchEvent(event);
-                return true;
+                // Disallow the touch request for ScrollView when user touches the review ListView
+                v.getParent().requestDisallowInterceptTouchEvent(true);
+                return false;
             }
-        });*/
-
+        });
 
         final ImageView favoriteButton = (ImageView) rootView.findViewById(R.id.favoriteButton);
         if(checkInDatabase(getActivity(), movie.getMovieId()))
@@ -440,6 +418,7 @@ public class MovieDetailFragment extends Fragment{
 
                 trailersListView.setAdapter(new TrailerAdapter(getActivity(), MovieDetailFragment.this.trailers));
             }
+
         }
     }
 }

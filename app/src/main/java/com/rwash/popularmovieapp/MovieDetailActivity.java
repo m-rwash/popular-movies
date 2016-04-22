@@ -1,9 +1,7 @@
 package com.rwash.popularmovieapp;
 
-import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 
 import com.rwash.popularmovieapp.fragments.MovieDetailFragment;
 import com.rwash.popularmovieapp.model.Movie;
@@ -52,5 +50,5 @@ public class MovieDetailActivity extends AppCompatActivity
     {
         return movie;
     }
-    
+
 }

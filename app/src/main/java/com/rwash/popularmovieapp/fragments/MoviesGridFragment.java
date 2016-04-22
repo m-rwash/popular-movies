@@ -3,6 +3,8 @@ package com.rwash.popularmovieapp.fragments;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -31,6 +33,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.InetAddress;
 import java.net.URL;
 import java.util.ArrayList;
 
@@ -40,6 +43,8 @@ public class MoviesGridFragment extends Fragment
     private RecyclerView recyclerViewMovies;
     public final static String api_key = "aeab5ec62e5555d42ace5362024cbbaf";
 
+    public static boolean connected=false;
+
     public MoviesGridFragment()
     {
         // Required empty public constructor
@@ -48,13 +53,37 @@ public class MoviesGridFragment extends Fragment
     public void update()
     {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        String order = sharedPreferences.getString(getString(R.string.pref_order_key),
-                                                   getString(R.string.pref_order_popular));
 
-        if(order.equals("favorites"))
+        String order = sharedPreferences.getString(getString(R.string.pref_order_key),
+                getString(R.string.pref_order_popular));
+
+
+        Log.v("NET ", connected + "");
+
+        if(order.equals("favorites") || !connected)
         {
-            ArrayList<Movie> movies = getMoviesFromDatabase();
+            final ArrayList<Movie> movies = getMoviesFromDatabase();
+
+            MoviesAdapter moviesAdapter = new MoviesAdapter(movies);
             recyclerViewMovies.setAdapter(new MoviesAdapter(movies));
+            // set first movie in detail fragment by default
+           if(MainActivity.twoPane)
+           {
+               GridFragmentCallbacks gridFragmentCallbacks = (GridFragmentCallbacks)getActivity();
+               gridFragmentCallbacks.setMovie(movies.get(0));
+           }
+
+            moviesAdapter.setClickListener(new MoviesAdapter.ClickListener(){
+                @Override
+                public void onItemClick(int position, View view) {
+                       /* MainActivity mainActivity = (MainActivity)getActivity();
+                        mainActivity.setMovie(movies.get(position));*/
+                    GridFragmentCallbacks gridFragmentCallbacks = (GridFragmentCallbacks)getActivity();
+                    gridFragmentCallbacks.setMovie(movies.get(position));
+
+                }
+            });
+            recyclerViewMovies.setAdapter(moviesAdapter);
         }
         else
         {
@@ -62,10 +91,22 @@ public class MoviesGridFragment extends Fragment
         }
     }
 
+    public boolean isConnected() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getActivity().getSystemService(getActivity().CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
+
     @Override
     public void onStart()
     {
         super.onStart();
+
+        // if there's no connection then display the user favorites
+        // to check them offline, from database
+        if(isConnected())
+            connected = true;
         update();
     }
 
@@ -317,6 +358,14 @@ public class MoviesGridFragment extends Fragment
             if(!movies.isEmpty())
             {
                 MoviesAdapter moviesAdapter = new MoviesAdapter(movies);
+
+                // set first movie in detail fragment by deault
+                if(MainActivity.twoPane)
+                {
+                    GridFragmentCallbacks gridFragmentCallbacks = (GridFragmentCallbacks)getActivity();
+                    gridFragmentCallbacks.setMovie(movies.get(0));
+
+                }
                 moviesAdapter.setClickListener(new MoviesAdapter.ClickListener(){
                     @Override
                     public void onItemClick(int position, View view) {
