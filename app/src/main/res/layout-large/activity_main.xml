@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:showDividers="middle"
+    tools:context="com.rwash.popularmovieapp.MainActivity"
+    android:background="@color/background"
+    android:weightSum="3">
+
+    <fragment
+        android:id="@+id/moviesGridFragment"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:name="com.rwash.popularmovieapp.fragments.MoviesGridFragment">
+    </fragment>
+
+    <FrameLayout
+        android:id="@+id/movieDetailsContainer"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="2">
+    </FrameLayout>
+
+</LinearLayout>

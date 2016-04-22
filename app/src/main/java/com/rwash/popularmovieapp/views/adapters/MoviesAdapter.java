@@ -1,4 +1,4 @@
-package com.rwash.popularmovieapp;
+package com.rwash.popularmovieapp.views.adapters;
 
 import android.content.Context;
 import android.content.Intent;
@@ -8,8 +8,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.rwash.popularmovieapp.MainActivity;
+import com.rwash.popularmovieapp.MovieDetailActivity;
+import com.rwash.popularmovieapp.R;
+import com.rwash.popularmovieapp.model.Movie;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -17,18 +20,25 @@ import java.util.ArrayList;
 /**
  * Created by bonzo on 3/20/16.
  */
-public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder> {
+public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder>
+{
 
-    private static ArrayList<MovieObject> moviesArray = new ArrayList<>();
+    private static ArrayList<Movie> moviesArray = new ArrayList<>();
 
-    public final static String EXTRA_MOVIE_TITLE          = "MOVIE_TITLE";
-    public final static String EXTRA_MOVIE_POSTER         = "MOVIE_POSTER";
-    public final static String EXTRA_MOVIE_OVERVIEW       = "MOVIE_OVERVIEW";
-    public final static String EXTRA_MOVIE_RELEASE_DATE   = "MOVIE_RELEASE_DATE";
-    public final static String EXTRA_MOVIE_ORIGINAL_TITLE = "MOVIE_ORIGINAL_TITLE";
+    private static ClickListener clickListener;
 
+    public interface ClickListener
+    {
+        void onItemClick(int position, View view);
+    }
 
-    public MoviesAdapter(ArrayList<MovieObject> moviesArray)
+    public void setClickListener(ClickListener clickListener)
+    {
+        this.clickListener = clickListener;
+    }
+    static int i;
+
+    public MoviesAdapter(ArrayList<Movie> moviesArray)
     {
         this.moviesArray = moviesArray;
     }
@@ -49,23 +59,14 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder
             // set onClickListener
             itemView.setOnClickListener(this);
         }
-
-        // handle click from onClickListener
         @Override
-        public void onClick(View v)
+        public void onClick(View view)
         {
-            /* Initialize intent to pass movie attributes to MovieDetailActivity class*/
-            Intent intent = new Intent(context, MovieDetailActivity.class);
-            intent.putExtra(EXTRA_MOVIE_TITLE,          moviesArray.get(getAdapterPosition()).getTitle());
-            intent.putExtra(EXTRA_MOVIE_POSTER,         moviesArray.get(getAdapterPosition()).getImageUrl());
-            intent.putExtra(EXTRA_MOVIE_OVERVIEW,       moviesArray.get(getAdapterPosition()).getOverview());
-            intent.putExtra(EXTRA_MOVIE_RELEASE_DATE,   moviesArray.get(getAdapterPosition()).getReleaseDate());
-            intent.putExtra(EXTRA_MOVIE_ORIGINAL_TITLE, moviesArray.get(getAdapterPosition()).getOriginalTitle());
-
-            context.startActivity(intent);
-            Toast.makeText(context, moviesArray.get(getAdapterPosition()).getTitle(), Toast.LENGTH_SHORT).show();
+            if(clickListener != null)
+                clickListener.onItemClick(getLayoutPosition(), view);
         }
     }
+
 
     // Inflating from layout xml and returning holder
     @Override
@@ -96,6 +97,18 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder
         Picasso.with(holder.context)
                .load(moviesArray.get(position).getImageUrl())
                .into(holder.imageView);
+
+    /*    if(position == 0)
+        {
+            movieTitle          = moviesArray.get(holder.getAdapterPosition()).getTitle();
+            moviePoster         = moviesArray.get(holder.getAdapterPosition()).getImageUrl();
+            movieOverview       = moviesArray.get(holder.getAdapterPosition()).getOverview();
+            movieReleaseDate    = moviesArray.get(holder.getAdapterPosition()).getReleaseDate();
+            movieOriginalTitle  = moviesArray.get(holder.getAdapterPosition()).getOriginalTitle();
+            movieId             = moviesArray.get(holder.getAdapterPosition()).getMovieId();
+        }*/
+
+
     }
 
     // returning count of data model we have fetched

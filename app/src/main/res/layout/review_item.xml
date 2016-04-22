@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    card_view:cardBackgroundColor="@color/background"
+    card_view:cardCornerRadius="4dp">
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:id="@+id/reviewAuthorTv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="author: "
+                android:textSize="17dp"
+                android:textStyle="bold"
+                android:textColor="#000"
+                android:maxLength="7"/>
+            <TextView
+                android:id="@+id/reviewContentTv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="content"
+                android:textSize="14dp"
+                android:textColor="#000"/>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/reviewUrlTv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="https://www.example.com"
+            android:textColor="#a90000"
+            android:textStyle="italic"
+            android:autoLink="web"/>
+
+    </LinearLayout>
+
+</android.support.v7.widget.CardView>

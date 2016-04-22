@@ -1,4 +1,4 @@
-package com.rwash.popularmovieapp;
+package com.rwash.popularmovieapp.views;
 
 import android.content.Context;
 import android.util.AttributeSet;

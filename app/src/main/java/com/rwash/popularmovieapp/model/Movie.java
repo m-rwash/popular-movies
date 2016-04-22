@@ -1,9 +1,12 @@
-package com.rwash.popularmovieapp;
+package com.rwash.popularmovieapp.model;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * Created by bonzo on 3/26/16.
  */
-public class MovieObject {
+public class Movie {
 
     /*Movie attributes*/
     private String title;
@@ -11,13 +14,19 @@ public class MovieObject {
     private String overview;
     private String releaseDate;
     private String originalTitle;
+    private String movieId;
 
-    public MovieObject(String title, String imageUrl, String overview, String releaseDate, String originalTitle) {
+    private ArrayList<String> trailers = new ArrayList<>();
+    private ArrayList<String> reviews  = new ArrayList<>();
+
+    public Movie(String title, String imageUrl, String overview, String releaseDate, String originalTitle, String movieId)
+    {
         this.title         = title;
         this.imageUrl      = imageUrl;
         this.overview      = overview;
         this.releaseDate   = releaseDate;
         this.originalTitle = originalTitle;
+        this.movieId       = movieId;
     }
 
     /*Attributes setters*/
@@ -36,8 +45,13 @@ public class MovieObject {
     public void setReleaseDate(String releaseDate) {
         this.releaseDate = releaseDate;
     }
+
     public void setOriginalTitle(String originalTitle) {
         this.originalTitle = originalTitle;
+    }
+
+    public void setMovieId(String movieId) {
+        this.movieId = movieId;
     }
 
     /*Attributes getters*/
@@ -60,4 +74,14 @@ public class MovieObject {
     public String getOriginalTitle() {
         return originalTitle;
     }
+
+    public String getMovieId() {
+        return movieId;
+    }
+
+    public String[] getArrayInfo(){
+        return new String[]{title, imageUrl, overview, releaseDate, originalTitle, movieId};
+    }
+
+
 }
