@@ -10,10 +10,10 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
+
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -21,12 +21,10 @@ import android.widget.Toast;
 
 import com.rwash.popularmovieapp.MovieDetailActivity;
 import com.rwash.popularmovieapp.R;
-import com.rwash.popularmovieapp.data.FavoritesContract;
 import com.rwash.popularmovieapp.data.FavoritesDbHelper;
 import com.rwash.popularmovieapp.model.Movie;
 import com.rwash.popularmovieapp.model.Review;
 import com.rwash.popularmovieapp.model.Trailer;
-import com.rwash.popularmovieapp.views.adapters.MoviesAdapter;
 import com.rwash.popularmovieapp.views.adapters.ReviewAdapter;
 import com.rwash.popularmovieapp.views.adapters.TrailerAdapter;
 import com.squareup.picasso.Picasso;
@@ -53,14 +51,7 @@ public class MovieDetailFragment extends Fragment{
 
     public MovieDetailFragment(){}
 
-    private String movieTitle         = null;
-    private String moviePoster        = null;
-    private String movieOverview      = null;
-    private String movieReleaseDate   = null;
-    private String movieOriginalTitle = null;
-    private String movieId            = null;
-
-    
+    private Movie movie = null;
 
     private ArrayList<Trailer> trailers = new ArrayList<>();
     private ArrayList<Review> reviews = new ArrayList<>();
@@ -69,7 +60,6 @@ public class MovieDetailFragment extends Fragment{
 
     private ListView trailersListView;
     private ListView reviewsListView;
-
 
     String[] args;
 
@@ -80,52 +70,36 @@ public class MovieDetailFragment extends Fragment{
 
         if(getArguments()!=null)    // tablet
         {
-            //movie.setArrayInfo(getArguments().getStringArray("ArrayInfo"));
             args = Arrays.copyOf(getArguments().getStringArray("ArrayInfo"), 6);
-            movieTitle         = args[0];
-            moviePoster        = args[1];
-            movieOverview      = args[2];
-            movieReleaseDate   = args[3];
-            movieOriginalTitle = args[4];
-            movieId            = args[5];
+            /*
+            args[0] --> movieTitle
+            args[1] --> moviePoster
+            args[2] --> movieOverview
+            args[3] --> movieReleaseDate
+            args[4] --> movieOriginalTitle
+            args[5] --> movieId
+            */
+            movie = new Movie(args[0], args[1], args[2], args[3], args[4], args[5]);
         }
         else    // phone
         {
             MovieDetailActivity activity = (MovieDetailActivity) getActivity();
-            movieTitle         = activity.getMovieTitle();
-            moviePoster        = activity.getMoviePoster();
-            movieOverview      = activity.getMovieOverview();
-            movieReleaseDate   = activity.getMovieReleaseDate();
-            movieOriginalTitle = activity.getMovieOriginalTitle();
-            movieId            = activity.getMovieId();
+            movie = activity.getMovie();
         }
-       /* MovieDetailActivity activity = (MovieDetailActivity) getActivity();
-        movieTitle         = activity.getMovieTitle();
-        moviePoster        = activity.getMoviePoster();
-        movieOverview      = activity.getMovieOverview();
-        movieReleaseDate   = activity.getMovieReleaseDate();
-        movieOriginalTitle = activity.getMovieOriginalTitle();
-        movieId            = activity.getMovieId();
-        *//*
-        movieTitle         = MoviesAdapter.getMovieTitle();
-        moviePoster        = MoviesAdapter.getMoviePoster();
-        movieOverview      = MoviesAdapter.getMovieOverview();
-        movieReleaseDate   = MoviesAdapter.getMovieReleaseDate();
-        movieOriginalTitle = MoviesAdapter.getMovieOriginalTitle();
-        movieId            = MoviesAdapter.getMovieId();*//*
 
-        Log.v(LOG_TAG, "movie title: " + movieTitle);
-        Log.v(LOG_TAG, "movie release date: " + movieReleaseDate);*/
-
+        Log.v(LOG_TAG, "movie title: " + movie.getTitle());
+        Log.v(LOG_TAG, "movie release date: " + movie.getReleaseDate());
     }
     @Override
     public void onStart() {
         super.onStart();
-        new FetchTrailers().execute(movieId);
-        new FetchReviews().execute(movieId);
+        new FetchTrailers().execute(movie.getMovieId());
+        new FetchReviews().execute(movie.getMovieId());
 
     }
 
+    /*this function is for returning moviedetail fragment
+     instantiated with passed movie details*/
     public static MovieDetailFragment getInstance(Movie movie)
     {
         Bundle bundle = new Bundle();
@@ -135,6 +109,8 @@ public class MovieDetailFragment extends Fragment{
         return  movieDetailFragment;
     }
 
+    /*
+    * Boolean Function to check if specific movie is in the database by it's ID  */
     public static boolean checkInDatabase(Context context, String movieId)
     {
         FavoritesDbHelper favoritesDbHelper = new FavoritesDbHelper(context);
@@ -159,21 +135,21 @@ public class MovieDetailFragment extends Fragment{
         View rootView = inflater.inflate(R.layout.fragment_movie_detail, container, false);
 
         TextView  movieTitleTextView = (TextView) rootView.findViewById(R.id.movieTitleTv);
-        movieTitleTextView.setText(movieTitle);
+        movieTitleTextView.setText(movie.getTitle());
 
         TextView movieOriginalTitleTextViw = (TextView) rootView.findViewById(R.id.movieOriginalTitleTv);
-        movieOriginalTitleTextViw.setText("("+movieOriginalTitle+")");
+        movieOriginalTitleTextViw.setText("("+movie.getOriginalTitle()+")");
 
         TextView movieReleaseDateTextView = (TextView) rootView.findViewById(R.id.movieReleaseDateTv);
-        movieReleaseDateTextView.setText(movieReleaseDate);
+        movieReleaseDateTextView.setText(movie.getReleaseDate());
 
         TextView movieOverviewTextView = (TextView) rootView.findViewById(R.id.movieOverviewTv);
-        movieOverviewTextView.setText(movieOverview);
+        movieOverviewTextView.setText(movie.getOverview());
 
         ImageView moviePosterImageView = (ImageView) rootView.findViewById(R.id.moviePosterIv);
 
         Picasso.with(getActivity())
-                .load(moviePoster)
+                .load(movie.getImageUrl())
                 .into(moviePosterImageView);
 
         trailersListView = (ListView)rootView.findViewById(R.id.trailersLv);
@@ -225,7 +201,7 @@ public class MovieDetailFragment extends Fragment{
 
 
         final ImageView favoriteButton = (ImageView) rootView.findViewById(R.id.favoriteButton);
-        if(checkInDatabase(getActivity(), movieId))
+        if(checkInDatabase(getActivity(), movie.getMovieId()))
             favoriteButton.setImageResource(R.drawable.star);
 
         favoriteButton.setOnClickListener(new View.OnClickListener() {
@@ -235,21 +211,21 @@ public class MovieDetailFragment extends Fragment{
                 FavoritesDbHelper favoritesDbHelper = new FavoritesDbHelper(getActivity());
                 SQLiteDatabase db =  favoritesDbHelper.getWritableDatabase();
 
-                if(checkInDatabase(getActivity(), movieId))
+                if(checkInDatabase(getActivity(), movie.getMovieId()))
                 {
-                    db.delete(FavoritesMoviesEntry.TABLE_NAME, FavoritesMoviesEntry.COLUMN_MOVIE_ID + "=?", new String[]{movieId});
+                    db.delete(FavoritesMoviesEntry.TABLE_NAME, FavoritesMoviesEntry.COLUMN_MOVIE_ID + "=?", new String[]{movie.getMovieId()});
                     favoriteButton.setImageResource(R.drawable.unstar);
                     Toast.makeText(getActivity(), "Deleted from Favorites!", Toast.LENGTH_SHORT).show();
                 }
                 else
                 {
                     ContentValues values = new ContentValues();
-                    values.put(FavoritesMoviesEntry.COLUMN_MOVIE_ID, movieId);
-                    values.put(FavoritesMoviesEntry.COLUMN_MOVIE_TITLE, movieTitle);
-                    values.put(FavoritesMoviesEntry.COLUMN_MOVIE_ORIGINAL_TITLE, movieOriginalTitle);
-                    values.put(FavoritesMoviesEntry.COLUMN_MOVIE_RELEASE_DATE, movieReleaseDate);
-                    values.put(FavoritesMoviesEntry.COLUMN_MOVIE_OVERVIEW, movieOverview);
-                    values.put(FavoritesMoviesEntry.COLUMN_MOVIE_POSTER_URL, moviePoster);
+                    values.put(FavoritesMoviesEntry.COLUMN_MOVIE_ID, movie.getMovieId());
+                    values.put(FavoritesMoviesEntry.COLUMN_MOVIE_TITLE, movie.getTitle());
+                    values.put(FavoritesMoviesEntry.COLUMN_MOVIE_ORIGINAL_TITLE, movie.getOriginalTitle());
+                    values.put(FavoritesMoviesEntry.COLUMN_MOVIE_RELEASE_DATE, movie.getReleaseDate());
+                    values.put(FavoritesMoviesEntry.COLUMN_MOVIE_OVERVIEW, movie.getOverview());
+                    values.put(FavoritesMoviesEntry.COLUMN_MOVIE_POSTER_URL, movie.getImageUrl());
 
                     db.insert(FavoritesMoviesEntry.TABLE_NAME, FavoritesMoviesEntry.COLUMN_MOVIE_TITLE, values);
                     favoriteButton.setImageResource(R.drawable.star);

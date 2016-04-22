@@ -16,8 +16,6 @@ public class Movie {
     private String originalTitle;
     private String movieId;
 
-    private String[] arrayInfo = {title, imageUrl, overview, releaseDate, originalTitle, movieId};
-
     private ArrayList<String> trailers = new ArrayList<>();
     private ArrayList<String> reviews  = new ArrayList<>();
 
@@ -47,9 +45,11 @@ public class Movie {
     public void setReleaseDate(String releaseDate) {
         this.releaseDate = releaseDate;
     }
+
     public void setOriginalTitle(String originalTitle) {
         this.originalTitle = originalTitle;
     }
+
     public void setMovieId(String movieId) {
         this.movieId = movieId;
     }
@@ -83,7 +83,5 @@ public class Movie {
         return new String[]{title, imageUrl, overview, releaseDate, originalTitle, movieId};
     }
 
-    public void setArrayInfo(String[] arrayInfo) {
-        this.arrayInfo = Arrays.copyOf(arrayInfo, arrayInfo.length);
-    }
+
 }

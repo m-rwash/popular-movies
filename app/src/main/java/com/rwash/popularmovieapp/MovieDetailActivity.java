@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.rwash.popularmovieapp.fragments.MovieDetailFragment;
+import com.rwash.popularmovieapp.model.Movie;
 
 public class MovieDetailActivity extends AppCompatActivity
 {
@@ -15,6 +16,8 @@ public class MovieDetailActivity extends AppCompatActivity
     private String movieReleaseDate   = null;
     private String movieOriginalTitle = null;
     private String movieId            = null;
+
+    private Movie movie = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +37,8 @@ public class MovieDetailActivity extends AppCompatActivity
                 movieOriginalTitle = extras.getString("MOVIE_ORIGINAL_TITLE");
                 movieId            = extras.getString("MOVIE_ID");
 
+                movie = new Movie(movieTitle, moviePoster, movieOverview, movieReleaseDate, movieOriginalTitle, movieId);
+
 //                Log.v("moviedetailactivity", "TEST: "+extras.getString("MOVIE_TILE"));
 //                Log.v("moviedetailactivity", "TEST2: " + movieReleaseDate);
 
@@ -42,6 +47,11 @@ public class MovieDetailActivity extends AppCompatActivity
             }
 
         }
+    }
+
+    public Movie getMovie()
+    {
+        return movie;
     }
 
     public String getMovieTitle() {
