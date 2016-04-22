@@ -7,15 +7,25 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.support.v7.widget.Toolbar;
-import android.widget.FrameLayout;
 
+import com.rwash.popularmovieapp.fragments.MovieDetailFragment;
 import com.rwash.popularmovieapp.fragments.MoviesGridFragment;
+import com.rwash.popularmovieapp.model.Movie;
 
-public class MainActivity extends AppCompatActivity
+
+public class MainActivity extends AppCompatActivity implements MoviesGridFragment.GridFragmentCallbacks
 {
     private final String LOG_TAG = MainActivity.class.getSimpleName();
     public static boolean twoPane=false;
     Toolbar toolbar;
+
+    public final static String EXTRA_MOVIE_TITLE          = "MOVIE_TITLE";
+    public final static String EXTRA_MOVIE_POSTER         = "MOVIE_POSTER";
+    public final static String EXTRA_MOVIE_OVERVIEW       = "MOVIE_OVERVIEW";
+    public final static String EXTRA_MOVIE_RELEASE_DATE   = "MOVIE_RELEASE_DATE";
+    public final static String EXTRA_MOVIE_ORIGINAL_TITLE = "MOVIE_ORIGINAL_TITLE";
+    public final static String EXTRA_MOVIE_ID             = "MOVIE_ID";
+
 
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -26,36 +36,39 @@ public class MainActivity extends AppCompatActivity
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        if (savedInstanceState == null)
+        if(findViewById(R.id.movieDetailsContainer) != null)
         {
-            isTwoPane();
-            if(twoPane)
-            {
-                Log.v(LOG_TAG,"TWO PANE");
-                getSupportFragmentManager().beginTransaction()
-                        .add(R.id.frameLayoutMoviesGrid,new MoviesGridFragment()).commit();
-            }
-            else
-            {
-                Log.v(LOG_TAG,"ONE PANE");
-                getSupportFragmentManager().beginTransaction()
-                        .add(R.id.container,new MoviesGridFragment()).commit();
-            }
-
+            // then it's tablet
+            twoPane = true;
         }
 
     }
 
-    private void isTwoPane()
+    public void setMovie(Movie movie)
     {
-        FrameLayout frameLayout = (FrameLayout) findViewById(R.id.frameLayoutDetailContainer);
-        if(frameLayout != null)
-            twoPane = true;
+        if(twoPane)
+        {
+            MovieDetailFragment movieDetailFragment = MovieDetailFragment.getInstance(movie);
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.movieDetailsContainer, movieDetailFragment)
+                    .commit();
+        }
+        else
+        {
+            Intent intent = new Intent(this, MovieDetailActivity.class);
+            intent.putExtra(EXTRA_MOVIE_TITLE,          movie.getTitle());
+            intent.putExtra(EXTRA_MOVIE_POSTER,         movie.getImageUrl());
+            intent.putExtra(EXTRA_MOVIE_OVERVIEW,       movie.getOverview());
+            intent.putExtra(EXTRA_MOVIE_RELEASE_DATE,   movie.getReleaseDate());
+            intent.putExtra(EXTRA_MOVIE_ORIGINAL_TITLE, movie.getOriginalTitle());
+            intent.putExtra(EXTRA_MOVIE_ID,             movie.getMovieId());
+            startActivity(intent);
+        }
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu)
-    {
+    public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main_menu, menu);
         return true;
     }

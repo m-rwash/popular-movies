@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.rwash.popularmovieapp.MainActivity;
 import com.rwash.popularmovieapp.data.FavoritesContract.FavoritesMoviesEntry;
 import com.rwash.popularmovieapp.data.FavoritesDbHelper;
 import com.rwash.popularmovieapp.views.adapters.MoviesAdapter;
@@ -311,13 +312,30 @@ public class MoviesGridFragment extends Fragment
 
             return null;
         }
-
         @Override
-        protected void onPostExecute(ArrayList<Movie> movies) {
+        protected void onPostExecute(final ArrayList<Movie> movies) {
             if(!movies.isEmpty())
             {
-                recyclerViewMovies.setAdapter(new MoviesAdapter(movies));
+                MoviesAdapter moviesAdapter = new MoviesAdapter(movies);
+                moviesAdapter.setClickListener(new MoviesAdapter.ClickListener(){
+                    @Override
+                    public void onItemClick(int position, View view) {
+                       /* MainActivity mainActivity = (MainActivity)getActivity();
+                        mainActivity.setMovie(movies.get(position));*/
+                        GridFragmentCallbacks gridFragmentCallbacks = (GridFragmentCallbacks)getActivity();
+                        gridFragmentCallbacks.setMovie(movies.get(position));
+
+                    }
+                });
+                recyclerViewMovies.setAdapter(moviesAdapter);
+
             }
         }
+    }
+
+
+    public interface GridFragmentCallbacks{
+        public void setMovie(Movie movie);
+
     }
 }

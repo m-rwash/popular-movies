@@ -23,8 +23,10 @@ import com.rwash.popularmovieapp.MovieDetailActivity;
 import com.rwash.popularmovieapp.R;
 import com.rwash.popularmovieapp.data.FavoritesContract;
 import com.rwash.popularmovieapp.data.FavoritesDbHelper;
+import com.rwash.popularmovieapp.model.Movie;
 import com.rwash.popularmovieapp.model.Review;
 import com.rwash.popularmovieapp.model.Trailer;
+import com.rwash.popularmovieapp.views.adapters.MoviesAdapter;
 import com.rwash.popularmovieapp.views.adapters.ReviewAdapter;
 import com.rwash.popularmovieapp.views.adapters.TrailerAdapter;
 import com.squareup.picasso.Picasso;
@@ -40,6 +42,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import com.rwash.popularmovieapp.data.FavoritesContract.FavoritesMoviesEntry;
 
@@ -47,6 +50,8 @@ import com.rwash.popularmovieapp.data.FavoritesContract.FavoritesMoviesEntry;
  * Created by bonzo on 3/25/16.
  */
 public class MovieDetailFragment extends Fragment{
+
+    public MovieDetailFragment(){}
 
     private String movieTitle         = null;
     private String moviePoster        = null;
@@ -62,20 +67,53 @@ public class MovieDetailFragment extends Fragment{
 
     private ListView trailersListView;
     private ListView reviewsListView;
+
+
+    String[] args;
+
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        MovieDetailActivity activity = (MovieDetailActivity) getActivity();
+
+        if(getArguments()!=null)    // tablet
+        {
+            //movie.setArrayInfo(getArguments().getStringArray("ArrayInfo"));
+            args = Arrays.copyOf(getArguments().getStringArray("ArrayInfo"), 6);
+            movieTitle         = args[0];
+            moviePoster        = args[1];
+            movieOverview      = args[2];
+            movieReleaseDate   = args[3];
+            movieOriginalTitle = args[4];
+            movieId            = args[5];
+        }
+        else    // phone
+        {
+            MovieDetailActivity activity = (MovieDetailActivity) getActivity();
+            movieTitle         = activity.getMovieTitle();
+            moviePoster        = activity.getMoviePoster();
+            movieOverview      = activity.getMovieOverview();
+            movieReleaseDate   = activity.getMovieReleaseDate();
+            movieOriginalTitle = activity.getMovieOriginalTitle();
+            movieId            = activity.getMovieId();
+        }
+       /* MovieDetailActivity activity = (MovieDetailActivity) getActivity();
         movieTitle         = activity.getMovieTitle();
         moviePoster        = activity.getMoviePoster();
         movieOverview      = activity.getMovieOverview();
         movieReleaseDate   = activity.getMovieReleaseDate();
         movieOriginalTitle = activity.getMovieOriginalTitle();
         movieId            = activity.getMovieId();
+        *//*
+        movieTitle         = MoviesAdapter.getMovieTitle();
+        moviePoster        = MoviesAdapter.getMoviePoster();
+        movieOverview      = MoviesAdapter.getMovieOverview();
+        movieReleaseDate   = MoviesAdapter.getMovieReleaseDate();
+        movieOriginalTitle = MoviesAdapter.getMovieOriginalTitle();
+        movieId            = MoviesAdapter.getMovieId();*//*
 
         Log.v(LOG_TAG, "movie title: " + movieTitle);
-        Log.v(LOG_TAG, "movie release date: " + movieReleaseDate);
+        Log.v(LOG_TAG, "movie release date: " + movieReleaseDate);*/
 
     }
     @Override
@@ -84,6 +122,15 @@ public class MovieDetailFragment extends Fragment{
         new FetchTrailers().execute(movieId);
         new FetchReviews().execute(movieId);
 
+    }
+
+    public static MovieDetailFragment getInstance(Movie movie)
+    {
+        Bundle bundle = new Bundle();
+        bundle.putStringArray("ArrayInfo", movie.getArrayInfo());
+        MovieDetailFragment movieDetailFragment = new MovieDetailFragment();
+        movieDetailFragment.setArguments(bundle);
+        return  movieDetailFragment;
     }
 
     public static boolean checkInDatabase(Context context, String movieId)
@@ -128,7 +175,7 @@ public class MovieDetailFragment extends Fragment{
                 .into(moviePosterImageView);
 
         trailersListView = (ListView)rootView.findViewById(R.id.trailersLv);
-
+/*
         trailersListView.setOnTouchListener(new ListView.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -149,11 +196,11 @@ public class MovieDetailFragment extends Fragment{
                 v.onTouchEvent(event);
                 return true;
             }
-        });
+        });*/
 
         reviewsListView = (ListView) rootView.findViewById(R.id.reviewsLv);
 
-        reviewsListView.setOnTouchListener(new ListView.OnTouchListener() {
+      /*  reviewsListView.setOnTouchListener(new ListView.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 int action = event.getAction();
@@ -172,7 +219,7 @@ public class MovieDetailFragment extends Fragment{
                 v.onTouchEvent(event);
                 return true;
             }
-        });
+        });*/
 
 
         final ImageView favoriteButton = (ImageView) rootView.findViewById(R.id.favoriteButton);
