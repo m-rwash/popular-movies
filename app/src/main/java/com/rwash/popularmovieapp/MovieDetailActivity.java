@@ -25,7 +25,6 @@ public class MovieDetailActivity extends AppCompatActivity
         setContentView(R.layout.activity_movie_detail);
         if(savedInstanceState==null)
         {
-
             Bundle extras = getIntent().getExtras();
 
             if(extras!=null)
@@ -53,29 +52,5 @@ public class MovieDetailActivity extends AppCompatActivity
     {
         return movie;
     }
-
-    public String getMovieTitle() {
-        return movieTitle;
-    }
-
-    public String getMoviePoster() {
-        return moviePoster;
-    }
-
-    public String getMovieOverview() {
-        return movieOverview;
-    }
-
-    public String getMovieReleaseDate() {
-        return movieReleaseDate;
-    }
-
-    public String getMovieOriginalTitle() {
-        return movieOriginalTitle;
-    }
-
-    public String getMovieId() {
-        return movieId;
-    }
-
+    
 }
