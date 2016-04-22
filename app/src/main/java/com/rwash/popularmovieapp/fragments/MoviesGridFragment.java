@@ -57,7 +57,6 @@ public class MoviesGridFragment extends Fragment
         String order = sharedPreferences.getString(getString(R.string.pref_order_key),
                 getString(R.string.pref_order_popular));
 
-
         Log.v("NET ", connected + "");
 
         if(order.equals("favorites") || !connected)
