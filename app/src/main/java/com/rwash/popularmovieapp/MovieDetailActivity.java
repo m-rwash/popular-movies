@@ -7,18 +7,14 @@ import android.util.Log;
 
 import com.rwash.popularmovieapp.fragments.MovieDetailFragment;
 
-public class MovieDetailActivity extends AppCompatActivity {
-
+public class MovieDetailActivity extends AppCompatActivity
+{
     private String movieTitle         = null;
     private String moviePoster        = null;
     private String movieOverview      = null;
     private String movieReleaseDate   = null;
     private String movieOriginalTitle = null;
     private String movieId            = null;
-
-    public String getMovieOriginalTitle() {
-        return movieOriginalTitle;
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,25 +34,11 @@ public class MovieDetailActivity extends AppCompatActivity {
                 movieOriginalTitle = extras.getString("MOVIE_ORIGINAL_TITLE");
                 movieId            = extras.getString("MOVIE_ID");
 
-                Log.v("moviedetailactivity", "TEST: "+extras.getString("MOVIE_TILE"));
-                Log.v("moviedetailactivity", "TEST2: " + movieReleaseDate);
+//                Log.v("moviedetailactivity", "TEST: "+extras.getString("MOVIE_TILE"));
+//                Log.v("moviedetailactivity", "TEST2: " + movieReleaseDate);
 
                 getSupportFragmentManager().beginTransaction()
                         .add(R.id.movie_detail_container,new MovieDetailFragment()).commit();
-/*
-                if(MainActivity.twoPane)
-                {
-
-                    getSupportFragmentManager().beginTransaction()
-                            .add(R.id.movieDetailsContainer,new MovieDetailFragment()).commit();
-
-                }
-                else
-                {
-                    getSupportFragmentManager().beginTransaction()
-                            .add(R.id.movie_detail_container,new MovieDetailFragment()).commit();
-                }*/
-
             }
 
         }
@@ -78,7 +60,12 @@ public class MovieDetailActivity extends AppCompatActivity {
         return movieReleaseDate;
     }
 
+    public String getMovieOriginalTitle() {
+        return movieOriginalTitle;
+    }
+
     public String getMovieId() {
         return movieId;
     }
+
 }

@@ -26,7 +26,6 @@ public class MainActivity extends AppCompatActivity implements MoviesGridFragmen
     public final static String EXTRA_MOVIE_ORIGINAL_TITLE = "MOVIE_ORIGINAL_TITLE";
     public final static String EXTRA_MOVIE_ID             = "MOVIE_ID";
 
-
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
@@ -48,7 +47,10 @@ public class MainActivity extends AppCompatActivity implements MoviesGridFragmen
     {
         if(twoPane)
         {
+            // Its a tablet, so we'll start new fragment with movie's details
+            // first we need to get instance of moveidetail fragment
             MovieDetailFragment movieDetailFragment = MovieDetailFragment.getInstance(movie);
+            // then add fragment in the container
             getSupportFragmentManager()
                     .beginTransaction()
                     .replace(R.id.movieDetailsContainer, movieDetailFragment)
@@ -56,7 +58,10 @@ public class MainActivity extends AppCompatActivity implements MoviesGridFragmen
         }
         else
         {
+            // Its a phone, so we'll start new activity to display movie's details
+            // first we need to start the detail activity
             Intent intent = new Intent(this, MovieDetailActivity.class);
+            // then we'll pass movie info as extras with the intent
             intent.putExtra(EXTRA_MOVIE_TITLE,          movie.getTitle());
             intent.putExtra(EXTRA_MOVIE_POSTER,         movie.getImageUrl());
             intent.putExtra(EXTRA_MOVIE_OVERVIEW,       movie.getOverview());
@@ -80,7 +85,8 @@ public class MainActivity extends AppCompatActivity implements MoviesGridFragmen
 
         if (id == R.id.action_settings)
         {
-            Intent intent = new Intent(this,SettingsActivity.class);
+            // Start settings activity
+            Intent intent = new Intent(this, SettingsActivity.class);
             startActivity(intent);
             return true;
         }

@@ -60,6 +60,8 @@ public class MovieDetailFragment extends Fragment{
     private String movieOriginalTitle = null;
     private String movieId            = null;
 
+    
+
     private ArrayList<Trailer> trailers = new ArrayList<>();
     private ArrayList<Review> reviews = new ArrayList<>();
 
