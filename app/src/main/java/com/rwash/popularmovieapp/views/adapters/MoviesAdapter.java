@@ -97,18 +97,6 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder
         Picasso.with(holder.context)
                .load(moviesArray.get(position).getImageUrl())
                .into(holder.imageView);
-
-    /*    if(position == 0)
-        {
-            movieTitle          = moviesArray.get(holder.getAdapterPosition()).getTitle();
-            moviePoster         = moviesArray.get(holder.getAdapterPosition()).getImageUrl();
-            movieOverview       = moviesArray.get(holder.getAdapterPosition()).getOverview();
-            movieReleaseDate    = moviesArray.get(holder.getAdapterPosition()).getReleaseDate();
-            movieOriginalTitle  = moviesArray.get(holder.getAdapterPosition()).getOriginalTitle();
-            movieId             = moviesArray.get(holder.getAdapterPosition()).getMovieId();
-        }*/
-
-
     }
 
     // returning count of data model we have fetched

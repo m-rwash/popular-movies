@@ -45,6 +45,9 @@ import java.util.Arrays;
 
 import com.rwash.popularmovieapp.data.FavoritesContract.FavoritesMoviesEntry;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 /**
  * Created by bonzo on 3/25/16.
  */
@@ -69,6 +72,9 @@ public class MovieDetailFragment extends Fragment{
     {
         super.onCreate(savedInstanceState);
 
+        // for rotating. setRetainInstance: keep fragment alive when activity re-created
+        setRetainInstance(true);
+
         if(getArguments()!=null)    // tablet
         {
             args = Arrays.copyOf(getArguments().getStringArray("ArrayInfo"), 6);
@@ -88,8 +94,11 @@ public class MovieDetailFragment extends Fragment{
             movie = activity.getMovie();
         }
 
-        Log.v(LOG_TAG, "movie title: " + movie.getTitle());
-        Log.v(LOG_TAG, "movie release date: " + movie.getReleaseDate());
+        if(movie!=null)
+        {
+            Log.v(LOG_TAG, "movie title: " + movie.getTitle());
+            Log.v(LOG_TAG, "movie release date: " + movie.getReleaseDate());
+        }
     }
     @Override
     public void onStart()
@@ -133,24 +142,32 @@ public class MovieDetailFragment extends Fragment{
         return true;
     }
 
+    @BindView(R.id.movieTitleTv) TextView  movieTitleTextView;
+    @BindView(R.id.movieOriginalTitleTv) TextView movieOriginalTitleTextViw;
+    @BindView(R.id.movieReleaseDateTv) TextView movieReleaseDateTextView;
+    @BindView(R.id.movieOverviewTv) TextView movieOverviewTextView;
+    @BindView(R.id.moviePosterIv) ImageView moviePosterImageView;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         View rootView = inflater.inflate(R.layout.fragment_movie_detail, container, false);
 
-        TextView  movieTitleTextView = (TextView) rootView.findViewById(R.id.movieTitleTv);
+        ButterKnife.bind(this, rootView);
+
+        //TextView  movieTitleTextView = (TextView) rootView.findViewById(R.id.movieTitleTv);
         movieTitleTextView.setText(movie.getTitle());
 
-        TextView movieOriginalTitleTextViw = (TextView) rootView.findViewById(R.id.movieOriginalTitleTv);
+        //TextView movieOriginalTitleTextViw = (TextView) rootView.findViewById(R.id.movieOriginalTitleTv);
         movieOriginalTitleTextViw.setText("("+movie.getOriginalTitle()+")");
 
-        TextView movieReleaseDateTextView = (TextView) rootView.findViewById(R.id.movieReleaseDateTv);
+        //TextView movieReleaseDateTextView = (TextView) rootView.findViewById(R.id.movieReleaseDateTv);
         movieReleaseDateTextView.setText(movie.getReleaseDate());
 
-        TextView movieOverviewTextView = (TextView) rootView.findViewById(R.id.movieOverviewTv);
+        //TextView movieOverviewTextView = (TextView) rootView.findViewById(R.id.movieOverviewTv);
         movieOverviewTextView.setText(movie.getOverview());
 
-        ImageView moviePosterImageView = (ImageView) rootView.findViewById(R.id.moviePosterIv);
+        //ImageView moviePosterImageView = (ImageView) rootView.findViewById(R.id.moviePosterIv);
 
         Picasso.with(getActivity())
                 .load(movie.getImageUrl())
